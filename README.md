@@ -15,6 +15,7 @@ Feedback is therefore essential, especially as it is unclear whether this type o
 	- [Omero_Image_+_metadata_hub](#Omero_Image_+_metadata_hub)
 	- [long-term_archive_storage](#long-term_archive_storage)
 	- [matching](#matching)(fuzzy_similarity_matching,_direct_matching,_manual_linking)
+- [long-term_vision](#long-term vision of a connected rdm structure) of a connected rdm structure
 # RDM_system_connector
 
 - The purpose of this tool will be to connect different platforms that have been or will be used as part of research data management. 
@@ -61,3 +62,5 @@ graph TD
 	- however, a browser interface is planned to display the automatically generated matches, validate them by eye and create your own
 
 
+# long-term_vision_of_a_connected_RDM _structure
+![vision](/doc/imgs/longterm_vision_rdm.png)
