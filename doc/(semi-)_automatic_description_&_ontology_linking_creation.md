@@ -1,0 +1,2 @@
+- use [LLM](LLM_backbone.md) to create descriptions for the augmented tag's [(semi-)_automatic_tag_creation](#(semi-)_automatic_tag_creation)
+- combine the descriptions and tag's to use a character similarity based decision system which searches for the appropriate ontology and ontology entry through multiple queries using [Ontology lookup service v4 (OLS4)](https://www.ebi.ac.uk/ols4) 

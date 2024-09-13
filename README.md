@@ -1,14 +1,21 @@
 
 # **WARNING** 
-this is a proof-of-concept it has not been decided whether it will be finalised into a fully executable tool. 
-Therefore feedback is essential, especially as it is unclear whether this type of tool is useful at all and if so which parts, as the concept consists of many different parts.
+This is a proof of concept, it has not been decided whether it will be developed into a fully functional tool. 
+Feedback is therefore essential, especially as it is unclear whether this type of tool is useful at all, and if so, which parts, as the concept consists of many different parts.
 
 ---
 
 
 # RDM_system_connector
 
-this tool is intended to link different research data management platforms with each other
+- The purpose of this tool will be to connect different platforms that have been or will be used as part of research data management. 
+- Every part of the system is replaceable as the connection is the central point of the tool. 
+- the benefits in day-to-day research result from the cooperation of different stakeholders who work together on a project and do not necessarily have access to the same systems or do not use them in their work process despite having access
+- making essential information usable in all connected systems makes it possible to have it available more quickly and clearly
+- in the best case scenario, stakeholders receive information that they were previously unable to obtain
+[see a real practical example](/doc/practical_example_lin)
+
+
 
 ```mermaid
 graph TD
@@ -16,38 +23,32 @@ graph TD
     B --> C[Omero Image + metadata hub]
     C --> D[Long-term archive storage]
 
-    A -.->|fuzzy similarity matching or direct matching or manual linking| D
+    A -.->|matching e.g. fuzzy_similarity_matching| D
 ```
 
-## Internal project study registration
-- the idea is that every scientific project got a study registration anywhere anyhow
-- the registration could be a proposal (e.g. a pdf/ textfile to apply for funding programm or a thesis)
-- we use a separate plattform (egroupware) where people can register their study and book timeslots for particular instruments (e.g. MR, EEG, microscopes, computing servers)
-## ELN (e.g. RSpace, elabFTW) + inventory
-- a plattform where to write protocols of preparation procedures or plans for procedures
-- there're should be base protocols and subject specific applied onces (e.g. keep track of daily happenings)
-- being used to plan and structure the interaction between people working on different parts in a project (e.g. principle investigators sets the protocol and delegates the work; technical assistants prepair the tissue; doctoral student takes the pictures) 
+## Internal_project_study_registration
+- the main point of this part is that every scientific project has a study registration somewhere
+- the registration can be a proposal (e.g. a pdf/text file to apply for a funding programme or a thesis)
+- we use a separate platform (egroupware) where people can register their study and book time slots for specific instruments (e.g. MR, EEG, microscopes, computer servers)
+## ELN_(e.g._RSpace,_elabFTW)_+_inventory
+- a platform where protocols of preparation procedures or plans for procedures can be written
+- there should be basic protocols and subject-specific ones (e.g. keeping track of daily events)
+- be used to plan and structure the interaction between people working on different parts of a project (e.g. principal investigators set the protocol and delegate work; technical assistants prepare the tissue; doctoral candidates take the images). 
 
-## Omero Image + metadata hub
-- use inplace import to link the images from [[## Long-term archive storage]] into omero
-- use key-value pairs to show the metadata
-- create tag's from the [[## (semi-) automatic tag creation]] including tag descriptions from [[## (semi-) automatic description and ontology linking creation]]
+## Omero_Image_+_metadata_hub
+- use inplace import to link the images from [long-term_archive_storage](#long-term_archive_storage) to Omero
+- use key-value pairs to display the metadata
+- create tags from [(semi-)automatic_tag_creation](/doc/(semi-)_automatic_tag_creation) including tag descriptions from [(semi-)_automatic_description&_ontology_linking_creation](/doc/(semi-)_automatic_description_&_ontology_linking_creation)
+## long-term_archive_storage
+- crawl a mounted drive to find images, metadata files, projects, studies and add them to [ELN_(e.g._RSpace,_elabFTW)_+_inventory](#ELN_(e.g._RSpace,_elabFTW)_+_inventory) and [Omero_Image_+_metadata_hub](#Omero_Image_+_metadata_hub)
+- use file names, folder names, metadata for [(semi-)_automatic_tag_creation](/doc/(semi-)_automatic_tag_creation) and [(semi-)_automatic_description_&_ontology_linking_creation](/doc/(semi-)_automatic_description_&_ontology_linking_creation)
+## matching (fuzzy_similarity_matching,_direct_matching,_manual_linking)
+- **fuzzy** = Calculate the overlap of project names (from [internal_project_study_registration](#internal_project_study_registration) and folder names (from [long-term_archive_storage](#long-term_archive_storage)); 
+	- where a percentage of overlap of consecutive letters is specified; if the shortest name (either projectname or foldername) is completely contained in the other, by convention the overlap is set to 100%
+- TODO: **direct matching** = define a file (TODO: metadata entry) Define a file or a metadata entry from a file as the project name, which must be identical to that of the study application, character for character; i.e. a 100% match is assumed
+	- e.g. our project leaders have to sign an application letter which is included in [internal_project_study_registration](#internal_project_study_registration) and in [long-term_archive_storage](#long-term_archive_storage) for every new project or study. 
+	- as both files are identical, the project duration, project manager and project name can be read from them
+- TODO: **manual linking** = the linking table in the database could be filled manually to force a specific project/study to be linked to another;  
+	- however, a browser interface is planned to display the automatically generated matches, validate them by eye and create your own
 
-## fuzzy similarity matching or direct matching or manual linking
-- **fuzzy** = calculate the overlap of project names (from [[## Internal project study registration]] and foldernames (from [[## Long-term archive storage]]); 
-	- where a percentage of overlap of consecutive letters is specified. if the shortest name (either projectname or foldername) is completely contained in the other, set the overlap to 100% by convention
-- TODO: **direct matching** = define a file (TODO: metadata entry) define a file or a metadata entry from a file as the project name which must be identical character for character with that of the study application; i.e. a 100% match is assumed as given
-	- e.g. our project leaders have to sign a application letter which is included in [[## Internal project study registration]] and in every new project or study to come in [[## Long-term archive storage]] 
-	- since both files are identical, the project execution time span, the project leader and the project name can be read from them
-- TODO: **manual linking** = the linking table in the database could be filled manually to force a specific project/ study to be matched to another one;  
-	- however, a browser interface is planned to display the automatically determined matches, eye validate them and create your own
-## Long-term archive storage
-- crawl a mounted drive to find images, metadata-files, projects, studies to add it into [[## ELN (e.g. RSpace, elabFTW) + inventory]] and [[## Omero Image + metadata hub]]
-- use filenames, foldernames, metadata for  [[## (semi-) automatic tag creation]] and [[## (semi-) automatic description and ontology linking creation]]
-## (semi-) automatic tag creation
-- parse filenames, foldernames (TODO: metadata) to create possible tag's for a specific project (or TODO: study/ image) and save it to a json file
-- TODO: augment the tag's using LLM to write out abbreviations and translate to english 
 
-## (semi-) automatic description and ontology linking creation
-- TODO: use LLM to create descriptions for the augmented tag's [[## (semi-) automatic tag creation]]
-- TODO: use descriptions and tag's to find a matching ontology entry using [Ontology lookup service v4 (OLS4)](https://www.ebi.ac.uk/ols4)

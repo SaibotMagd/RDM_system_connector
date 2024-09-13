@@ -1,0 +1,196 @@
+{
+  "main": {
+    "id": "7c38be3f31bb5fd9",
+    "type": "split",
+    "children": [
+      {
+        "id": "8dd5ac6c45d7dc8e",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "fa0dff9d5f431d54",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "README.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "ba1b865023e34227",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "doc/(semi-)_automatic_tag_creation.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "8e4ecaefb54095d6",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "README.md",
+                "mode": "preview",
+                "source": false
+              }
+            }
+          }
+        ],
+        "currentTab": 2
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "28d6e17e7b1692ab",
+    "type": "split",
+    "children": [
+      {
+        "id": "907865b500c62d43",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "c869e72c9e4907b3",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "43406066642f03b5",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "d4d8238d0c6081da",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {}
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "8e8303f9d9524aba",
+    "type": "split",
+    "children": [
+      {
+        "id": "9e3912559668c23f",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "a9aa1ed9f691d380",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "README.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "65536ebc0d497699",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "README.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "d0976fa4f0c4eb41",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true
+              }
+            }
+          },
+          {
+            "id": "35454d9be4a7b252",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "README.md"
+              }
+            }
+          },
+          {
+            "id": "6700afeb3a2e0ca7",
+            "type": "leaf",
+            "state": {
+              "type": "git-view",
+              "state": {}
+            }
+          }
+        ],
+        "currentTab": 4
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "obsidian-git:Open Git source control": false
+    }
+  },
+  "active": "8e4ecaefb54095d6",
+  "lastOpenFiles": [
+    "doc/practical_example_lin.md",
+    "README.md",
+    "doc/LLM_backbone.md",
+    "doc/(semi-)_automatic_tag_creation.md",
+    "doc/(semi-)_automatic_description_&_ontology_linking_creation.md",
+    "LLM_backbone.md",
+    "README/ELN_(e.g._RSpace,_elabFTW)_+_inventory.md",
+    "README",
+    "concept-graph.md",
+    "doc"
+  ]
+}
