@@ -14,7 +14,7 @@ Feedback is therefore essential, especially as it is unclear whether this type o
 	- [ELN_(e.g._RSpace,_elabFTW)_+_inventory](#ELN_(e.g._RSpace,_elabFTW)_+_inventory)
 	- [Omero_Image_+_metadata_hub](#Omero_Image_+_metadata_hub)
 	- [long-term_archive_storage](#long-term_archive_storage)
-	- [matching (fuzzy_similarity_matching,_direct_matching,_manual_linking)](#matching (fuzzy_similarity_matching,_direct_matching,_manual_linking))
+	- [matching](#matching)(fuzzy_similarity_matching,_direct_matching,_manual_linking)
 # RDM_system_connector
 
 - The purpose of this tool will be to connect different platforms that have been or will be used as part of research data management. 
@@ -50,7 +50,8 @@ graph TD
 ## long-term_archive_storage
 - crawl a mounted drive to find images, metadata files, projects, studies and add them to [ELN_(e.g._RSpace,_elabFTW)_+_inventory](#ELN_(e.g._RSpace,_elabFTW)_+_inventory) and [Omero_Image_+_metadata_hub](#Omero_Image_+_metadata_hub)
 - use file names, folder names, metadata for [(semi-)_automatic_tag_creation](/doc/(semi-)_automatic_tag_creation.md) and [(semi-)_automatic_description_&_ontology_linking_creation](/doc/(semi-)_automatic_description_&_ontology_linking_creation.md)
-## matching (fuzzy_similarity_matching,_direct_matching,_manual_linking)
+## matching 
+## (fuzzy_similarity_matching,_direct_matching,_manual_linking)
 - **fuzzy** = Calculate the overlap of project names (from [internal_project_study_registration](#internal_project_study_registration) and folder names (from [long-term_archive_storage](#long-term_archive_storage)); 
 	- where a percentage of overlap of consecutive letters is specified; if the shortest name (either projectname or foldername) is completely contained in the other, by convention the overlap is set to 100%
 - TODO: **direct matching** = define a file (TODO: metadata entry) Define a file or a metadata entry from a file as the project name, which must be identical to that of the study application, character for character; i.e. a 100% match is assumed
