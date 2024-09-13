@@ -1,11 +1,20 @@
-
+![Lin_X_NFDI4BIOIMAGE](/doc/imgs/lin_x_nfdi4bioimage.png)
+# RDM_system_connector
 # **WARNING** 
 This is a proof of concept, it has not been decided whether it will be developed into a fully functional tool. 
 Feedback is therefore essential, especially as it is unclear whether this type of tool is useful at all, and if so, which parts, as the concept consists of many different parts.
 
 ---
 
-
+# Table of Contents:
+- [Purpose of the RDM_system_connector](#RDM_system_connector)
+	- [overview graph](#overview_graph)
+- Parts:
+	- [Internal_project_study_registration](#Internal_project_study_registration)
+	- [ELN_(e.g._RSpace,_elabFTW)_+_inventory](#ELN_(e.g._RSpace,_elabFTW)_+_inventory)
+	- [Omero_Image_+_metadata_hub](#Omero_Image_+_metadata_hub)
+	- [long-term_archive_storage](#long-term_archive_storage)
+	- [matching (fuzzy_similarity_matching,_direct_matching,_manual_linking)](#matching (fuzzy_similarity_matching,_direct_matching,_manual_linking))
 # RDM_system_connector
 
 - The purpose of this tool will be to connect different platforms that have been or will be used as part of research data management. 
@@ -15,15 +24,14 @@ Feedback is therefore essential, especially as it is unclear whether this type o
 - in the best case scenario, stakeholders receive information that they were previously unable to obtain
 [see a real practical example](/doc/practical_example_lin)
 
-
+#### overview_graph
 
 ```mermaid
 graph TD
-    A[Internal project study registration] --> B[ELN e.g. RSpace / inventory]
-    B --> C[Omero Image + metadata hub]
+    A[project registration] --> B[ELN e.g. RSpace]
+    B --> C[Omero hub]
     C --> D[Long-term archive storage]
-
-    A -.->|matching e.g. fuzzy_similarity_matching| D
+    A -- matching e.g. fuzzy_similarity_matching --> D
 ```
 
 ## Internal_project_study_registration
@@ -38,10 +46,10 @@ graph TD
 ## Omero_Image_+_metadata_hub
 - use inplace import to link the images from [long-term_archive_storage](#long-term_archive_storage) to Omero
 - use key-value pairs to display the metadata
-- create tags from [(semi-)automatic_tag_creation](/doc/(semi-)_automatic_tag_creation) including tag descriptions from [(semi-)_automatic_description&_ontology_linking_creation](/doc/(semi-)_automatic_description_&_ontology_linking_creation)
+- create tags from [(semi-)automatic_tag_creation](/doc/(semi-)_automatic_tag_creation.md) including tag descriptions from [(semi-)_automatic_description&_ontology_linking_creation](/doc/(semi-)_automatic_description_&_ontology_linking_creation.md)
 ## long-term_archive_storage
 - crawl a mounted drive to find images, metadata files, projects, studies and add them to [ELN_(e.g._RSpace,_elabFTW)_+_inventory](#ELN_(e.g._RSpace,_elabFTW)_+_inventory) and [Omero_Image_+_metadata_hub](#Omero_Image_+_metadata_hub)
-- use file names, folder names, metadata for [(semi-)_automatic_tag_creation](/doc/(semi-)_automatic_tag_creation) and [(semi-)_automatic_description_&_ontology_linking_creation](/doc/(semi-)_automatic_description_&_ontology_linking_creation)
+- use file names, folder names, metadata for [(semi-)_automatic_tag_creation](/doc/(semi-)_automatic_tag_creation.md) and [(semi-)_automatic_description_&_ontology_linking_creation](/doc/(semi-)_automatic_description_&_ontology_linking_creation.md)
 ## matching (fuzzy_similarity_matching,_direct_matching,_manual_linking)
 - **fuzzy** = Calculate the overlap of project names (from [internal_project_study_registration](#internal_project_study_registration) and folder names (from [long-term_archive_storage](#long-term_archive_storage)); 
 	- where a percentage of overlap of consecutive letters is specified; if the shortest name (either projectname or foldername) is completely contained in the other, by convention the overlap is set to 100%
