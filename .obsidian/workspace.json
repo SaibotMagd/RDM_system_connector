@@ -25,7 +25,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "doc/(semi-)_automatic_tag_creation.md",
+                "file": "doc/(semi-) automatic tag creation.md",
                 "mode": "source",
                 "source": false
               }
@@ -162,8 +162,7 @@
               "state": {}
             }
           }
-        ],
-        "currentTab": 4
+        ]
       }
     ],
     "direction": "horizontal",
@@ -182,15 +181,15 @@
   },
   "active": "8e4ecaefb54095d6",
   "lastOpenFiles": [
-    "doc/practical_example_lin.md",
+    "doc/(semi-) automatic description & ontology linking creation.md",
     "README.md",
+    "doc/(semi-) automatic tag creation.md",
+    "doc/practical example lin.md",
+    "doc/LLM backbone.md",
     "doc/imgs/longterm_vision_rdm.png",
     "doc/imgs/lin_x_nfdi4bioimage.png",
     "doc/imgs",
     "doc/Neuer Ordner",
-    "doc/LLM_backbone.md",
-    "doc/(semi-)_automatic_tag_creation.md",
-    "doc/(semi-)_automatic_description_&_ontology_linking_creation.md",
     "LLM_backbone.md",
     "README/ELN_(e.g._RSpace,_elabFTW)_+_inventory.md",
     "README",
