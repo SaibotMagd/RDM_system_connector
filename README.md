@@ -11,8 +11,8 @@ Feedback is therefore essential, especially as it is unclear whether this type o
 	- [overview graph](#overview_graph)
 - Parts:
 	- [Internal_project_study_registration](#Internal_project_study_registration)
-	- [ELN_(e.g._RSpace,_elabFTW)_+_inventory](#ELN_(e.g._RSpace,_elabFTW)_+_inventory)
-	- [Omero_Image_+_metadata_hub](#Omero_Image_+_metadata_hub)
+	- [ELN_(e.g._RSpace,_elabFTW)_+_inventory](#ELN_(e.g._RSpace,_elabFTW)_&_inventory)
+	- [Omero_Image_+_metadata_hub](#Omero_Image_&_metadata_hub)
 	- [long-term_archive_storage](#long-term_archive_storage)
 	- [matching](#matching)(fuzzy_similarity_matching,_direct_matching,_manual_linking)
 - [long-term_vision](#long-term_vision) of a connected rdm structure
@@ -23,7 +23,7 @@ Feedback is therefore essential, especially as it is unclear whether this type o
 - the benefits in day-to-day research result from the cooperation of different stakeholders who work together on a project and do not necessarily have access to the same systems or do not use them in their work process despite having access
 - making essential information usable in all connected systems makes it possible to have it available more quickly and clearly
 - in the best case scenario, stakeholders receive information that they were previously unable to obtain
-[see a real practical example](/doc/practical_example_lin)
+[see a real practical example](/doc/practical_example_lin.md)
 
 #### overview_graph
 
