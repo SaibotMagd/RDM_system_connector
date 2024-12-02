@@ -1,0 +1,306 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ols_lookup &mdash; RDM_system_connector documentation 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=2709fde1"></script>
+      <script src="../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            RDM_system_connector documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">RDM_system_connector</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">RDM_system_connector documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ols_lookup</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ols_lookup</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">argparse</span>
+
+<div class="viewcode-block" id="calculate_overlap">
+<a class="viewcode-back" href="../ols_lookup.html#ols_lookup.calculate_overlap">[docs]</a>
+<span class="k">def</span> <span class="nf">calculate_overlap</span><span class="p">(</span><span class="n">str1</span><span class="p">,</span> <span class="n">str2</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculate the overlap between two strings.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    str1 (str): The first string.</span>
+<span class="sd">    str2 (str): The second string.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    float: The overlap between the two strings.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">str1</span><span class="p">,</span> <span class="n">str2</span> <span class="o">=</span> <span class="n">str1</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="n">str2</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="n">overlap</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">str1</span><span class="p">,</span> <span class="n">str2</span><span class="p">)</span> <span class="k">if</span> <span class="n">a</span> <span class="o">==</span> <span class="n">b</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">overlap</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">str1</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="fetch_searchStr_info">
+<a class="viewcode-back" href="../ols_lookup.html#ols_lookup.fetch_searchStr_info">[docs]</a>
+<span class="k">def</span> <span class="nf">fetch_searchStr_info</span><span class="p">(</span><span class="n">searchStr</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;class,individual&#39;</span><span class="p">,</span> <span class="n">ontology_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Fetch searchStr information from the EBI OLS4 API.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    searchStr (str): The search string.</span>
+<span class="sd">    type (str): The type of search. Default is &#39;class,individual&#39;.</span>
+<span class="sd">    ontology_name (str): The name of the ontology. Default is None.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    dict: The JSON response from the API.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">base_url</span> <span class="o">=</span> <span class="s2">&quot;https://www.ebi.ac.uk/ols4/api/search&quot;</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;q&#39;</span><span class="p">:</span> <span class="n">searchStr</span><span class="p">,</span>
+        <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="nb">type</span><span class="p">,</span>
+        <span class="s1">&#39;fieldList&#39;</span><span class="p">:</span> <span class="s1">&#39;iri,label,short_form,obo_id,ontology_name&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;queryFields&#39;</span><span class="p">:</span> <span class="s1">&#39;iri,label,short_form,ontology_name&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;exact&#39;</span><span class="p">:</span> <span class="s1">&#39;false&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;groupField&#39;</span><span class="p">:</span> <span class="s1">&#39;http://www.ebi.ac.uk/efo/EFO_0001421&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;obsoletes&#39;</span><span class="p">:</span> <span class="s1">&#39;false&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;local&#39;</span><span class="p">:</span> <span class="s1">&#39;false&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;rows&#39;</span><span class="p">:</span> <span class="s1">&#39;10&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;start&#39;</span><span class="p">:</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;format&#39;</span><span class="p">:</span> <span class="s1">&#39;json&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;lang&#39;</span><span class="p">:</span> <span class="s1">&#39;en&#39;</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="n">ontology_name</span><span class="p">:</span>
+        <span class="n">params</span><span class="p">[</span><span class="s1">&#39;ontology&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ontology_name</span>
+
+    <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;accept&#39;</span><span class="p">:</span> <span class="s1">&#39;*/*&#39;</span>
+    <span class="p">}</span>
+
+    <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">base_url</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="generate_substrings">
+<a class="viewcode-back" href="../ols_lookup.html#ols_lookup.generate_substrings">[docs]</a>
+<span class="k">def</span> <span class="nf">generate_substrings</span><span class="p">(</span><span class="n">input_string</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generate all possible substrings from a given string.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    input_string (str): The input string.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    list: A list of substrings.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">words</span> <span class="o">=</span> <span class="n">input_string</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+    <span class="n">substrings</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># All possible substrings</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">words</span><span class="p">)):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">words</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+            <span class="n">substrings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">words</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">j</span><span class="p">]))</span>
+
+    <span class="c1"># All individual words</span>
+    <span class="n">substrings</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">words</span><span class="p">)</span>
+
+    <span class="c1"># Sort the list by length of the items</span>
+    <span class="n">substrings</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="nb">len</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">substrings</span></div>
+
+
+<div class="viewcode-block" id="get_matching_entries">
+<a class="viewcode-back" href="../ols_lookup.html#ols_lookup.get_matching_entries">[docs]</a>
+<span class="k">def</span> <span class="nf">get_matching_entries</span><span class="p">(</span><span class="n">searchStr</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ontology_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get matching entries for a given searchStr.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    searchStr (str): The search string.</span>
+<span class="sd">    type (str): The type of search. Default is None.</span>
+<span class="sd">    ontology_name (str): The name of the ontology. Default is None.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    tuple: A tuple containing a list of labels and a list of entries.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">searchStr_parts</span> <span class="o">=</span> <span class="n">generate_substrings</span><span class="p">(</span><span class="n">searchStr</span><span class="p">)</span>
+    <span class="n">entries</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">labels</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">searchStr_parts</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">fetch_searchStr_info</span><span class="p">(</span><span class="n">part</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">type</span><span class="p">,</span> <span class="n">ontology_name</span><span class="o">=</span><span class="n">ontology_name</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;response&#39;</span><span class="p">][</span><span class="s1">&#39;docs&#39;</span><span class="p">]:</span>
+            <span class="n">labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">doc</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">])</span>
+            <span class="n">entries</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">doc</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">labels</span><span class="p">,</span> <span class="n">entries</span></div>
+
+
+<div class="viewcode-block" id="find_best_match">
+<a class="viewcode-back" href="../ols_lookup.html#ols_lookup.find_best_match">[docs]</a>
+<span class="k">def</span> <span class="nf">find_best_match</span><span class="p">(</span><span class="n">part</span><span class="p">,</span> <span class="n">labels</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Find the best match for a given part in a list of labels.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    part (str): The part to match.</span>
+<span class="sd">    labels (list): A list of labels.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    str: The best match.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">word_overlap</span><span class="p">(</span><span class="n">part</span><span class="p">,</span> <span class="n">label</span><span class="p">):</span>
+        <span class="n">part_words</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">part</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+        <span class="n">label_words</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">label</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+        <span class="n">overlap</span> <span class="o">=</span> <span class="n">part_words</span> <span class="o">&amp;</span> <span class="n">label_words</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">overlap</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">label_words</span><span class="p">)</span>
+
+    <span class="n">best_match</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">max_score</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">labels</span><span class="p">:</span>
+        <span class="n">overlap</span><span class="p">,</span> <span class="n">label_length</span> <span class="o">=</span> <span class="n">word_overlap</span><span class="p">(</span><span class="n">part</span><span class="p">,</span> <span class="n">label</span><span class="p">)</span>
+        <span class="c1"># Calculate a score that considers both overlap and label length</span>
+        <span class="n">score</span> <span class="o">=</span> <span class="n">overlap</span> <span class="o">/</span> <span class="n">label_length</span>
+        <span class="k">if</span> <span class="n">score</span> <span class="o">&gt;</span> <span class="n">max_score</span><span class="p">:</span>
+            <span class="n">max_score</span> <span class="o">=</span> <span class="n">score</span>
+            <span class="n">best_match</span> <span class="o">=</span> <span class="n">label</span>
+
+    <span class="k">return</span> <span class="n">best_match</span></div>
+
+
+<div class="viewcode-block" id="read_json_file">
+<a class="viewcode-back" href="../ols_lookup.html#ols_lookup.read_json_file">[docs]</a>
+<span class="k">def</span> <span class="nf">read_json_file</span><span class="p">(</span><span class="n">file_path</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Read a JSON file and return the data.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    file_path (str): The path to the JSON file.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    dict: The data from the JSON file.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">data</span></div>
+
+
+<div class="viewcode-block" id="main">
+<a class="viewcode-back" href="../ols_lookup.html#ols_lookup.main">[docs]</a>
+<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">input_string</span><span class="p">,</span> <span class="n">output_format</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ontology_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Main function to handle the input and output.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    input_string (str): The input string.</span>
+<span class="sd">    output_format (str): The output format.</span>
+<span class="sd">    type (str): The type of search. Default is None.</span>
+<span class="sd">    ontology_name (str): The name of the ontology. Default is None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">labels</span><span class="p">,</span> <span class="n">entries</span> <span class="o">=</span> <span class="n">get_matching_entries</span><span class="p">(</span><span class="n">input_string</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">type</span><span class="p">,</span> <span class="n">ontology_name</span><span class="o">=</span><span class="n">ontology_name</span><span class="p">)</span>
+    <span class="n">best_match</span> <span class="o">=</span> <span class="n">find_best_match</span><span class="p">(</span><span class="n">input_string</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">labels</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">label</span> <span class="o">==</span> <span class="n">best_match</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">output_format</span> <span class="o">==</span> <span class="s1">&#39;iri&#39;</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">entries</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;iri&#39;</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">entries</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="k">break</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s1">&#39;Fetch searchStr information.&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;input&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Input string or JSON file path&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--format&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;iri&#39;</span><span class="p">,</span> <span class="s1">&#39;json&#39;</span><span class="p">],</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;json&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Output format&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--type&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Type of entity to search for (e.g. </span><span class="se">\&#39;</span><span class="s1">class,individual</span><span class="se">\&#39;</span><span class="s1">)&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--ontology&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Name(s) of ontology(s) to search in (e.g. </span><span class="se">\&#39;</span><span class="s1">ncit,omit</span><span class="se">\&#39;</span><span class="s1">)&#39;</span><span class="p">)</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.json&#39;</span><span class="p">):</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">read_json_file</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">main</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="n">args</span><span class="o">.</span><span class="n">format</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="n">ontology_name</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">ontology</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">main</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">format</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="n">ontology_name</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">ontology</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, saibotMagd.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

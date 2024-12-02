@@ -1,0 +1,280 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>all_to_db module &mdash; RDM_system_connector documentation 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=2709fde1"></script>
+      <script src="_static/doctools.js?v=9a2dae69"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="db_to_all_synced module" href="db_to_all_synced.html" />
+    <link rel="prev" title="RDM_system_connector" href="modules.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            RDM_system_connector documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">RDM_system_connector</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">all_to_db module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#all_to_db.auto_insert_netstore_to_database"><code class="docutils literal notranslate"><span class="pre">auto_insert_netstore_to_database()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#all_to_db.auto_insert_omero_to_database"><code class="docutils literal notranslate"><span class="pre">auto_insert_omero_to_database()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#all_to_db.convert_omero_timestamp"><code class="docutils literal notranslate"><span class="pre">convert_omero_timestamp()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#all_to_db.convert_rspace_timestamp"><code class="docutils literal notranslate"><span class="pre">convert_rspace_timestamp()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#all_to_db.get_current_username"><code class="docutils literal notranslate"><span class="pre">get_current_username()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#all_to_db.get_file_stats"><code class="docutils literal notranslate"><span class="pre">get_file_stats()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#all_to_db.get_netstore_filelist"><code class="docutils literal notranslate"><span class="pre">get_netstore_filelist()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#all_to_db.get_rspace_workspace_folders"><code class="docutils literal notranslate"><span class="pre">get_rspace_workspace_folders()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#all_to_db.insert_egroupware"><code class="docutils literal notranslate"><span class="pre">insert_egroupware()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#all_to_db.insert_rspace_to_db"><code class="docutils literal notranslate"><span class="pre">insert_rspace_to_db()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#all_to_db.process_rspace_documents"><code class="docutils literal notranslate"><span class="pre">process_rspace_documents()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#all_to_db.process_rspace_folder"><code class="docutils literal notranslate"><span class="pre">process_rspace_folder()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#all_to_db.process_tags"><code class="docutils literal notranslate"><span class="pre">process_tags()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="db_to_all_synced.html">db_to_all_synced module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="folder_extract_mt.html">folder_extract_mt module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="folder_extract_parallel.html">folder_extract_parallel module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="main.html">main module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ols_lookup.html">ols_lookup module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.html">src package</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">RDM_system_connector documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">RDM_system_connector</a></li>
+      <li class="breadcrumb-item active">all_to_db module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/all_to_db.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-all_to_db">
+<span id="all-to-db-module"></span><h1>all_to_db module<a class="headerlink" href="#module-all_to_db" title="Link to this heading"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="all_to_db.auto_insert_netstore_to_database">
+<span class="sig-prename descclassname"><span class="pre">all_to_db.</span></span><span class="sig-name descname"><span class="pre">auto_insert_netstore_to_database</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/all_to_db.html#auto_insert_netstore_to_database"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#all_to_db.auto_insert_netstore_to_database" title="Link to this definition"></a></dt>
+<dd><p>Automatically inserts Netstore file data into the database.</p>
+<p>This function retrieves a list of files from a specified folder, organizes them by project,
+and inserts the project and file data into the specified database tables.</p>
+<p>Returns:
+None</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="all_to_db.auto_insert_omero_to_database">
+<span class="sig-prename descclassname"><span class="pre">all_to_db.</span></span><span class="sig-name descname"><span class="pre">auto_insert_omero_to_database</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/all_to_db.html#auto_insert_omero_to_database"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#all_to_db.auto_insert_omero_to_database" title="Link to this definition"></a></dt>
+<dd><p>Automatically inserts OMERO data into the database.</p>
+<p>This function connects to the OMERO server, retrieves projects, datasets, and images,
+and inserts them along with their tags into the specified database tables.</p>
+<p>Returns:
+None</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="all_to_db.convert_omero_timestamp">
+<span class="sig-prename descclassname"><span class="pre">all_to_db.</span></span><span class="sig-name descname"><span class="pre">convert_omero_timestamp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestamp</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/all_to_db.html#convert_omero_timestamp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#all_to_db.convert_omero_timestamp" title="Link to this definition"></a></dt>
+<dd><p>Converts an OMERO timestamp to a standard datetime format.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>timestamp (str): The OMERO timestamp in the format “%Y-%m-%dT%H:%M:%S”.</p>
+</dd>
+<dt>Returns:</dt><dd><p>str: The converted timestamp in the format “%Y-%m-%d %H:%M:%S”.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="all_to_db.convert_rspace_timestamp">
+<span class="sig-prename descclassname"><span class="pre">all_to_db.</span></span><span class="sig-name descname"><span class="pre">convert_rspace_timestamp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestamp</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/all_to_db.html#convert_rspace_timestamp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#all_to_db.convert_rspace_timestamp" title="Link to this definition"></a></dt>
+<dd><p>Converts an RSpace timestamp to a standard datetime format.</p>
+<p>Parameters:
+timestamp (str): The RSpace timestamp in the format “%Y-%m-%dT%H:%M:%S.%fZ”.</p>
+<p>Returns:
+str: The converted timestamp in the format “%Y-%m-%d %H:%M:%S”.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="all_to_db.get_current_username">
+<span class="sig-prename descclassname"><span class="pre">all_to_db.</span></span><span class="sig-name descname"><span class="pre">get_current_username</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/all_to_db.html#get_current_username"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#all_to_db.get_current_username" title="Link to this definition"></a></dt>
+<dd><p>Retrieves the current username.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>str: The current username.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="all_to_db.get_file_stats">
+<span class="sig-prename descclassname"><span class="pre">all_to_db.</span></span><span class="sig-name descname"><span class="pre">get_file_stats</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/all_to_db.html#get_file_stats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#all_to_db.get_file_stats" title="Link to this definition"></a></dt>
+<dd><p>Retrieves statistics for a given file.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>file_path (str): The path to the file.</p>
+</dd>
+<dt>Returns:</dt><dd><p>dict: A dictionary containing the file statistics.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="all_to_db.get_netstore_filelist">
+<span class="sig-prename descclassname"><span class="pre">all_to_db.</span></span><span class="sig-name descname"><span class="pre">get_netstore_filelist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/all_to_db.html#get_netstore_filelist"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#all_to_db.get_netstore_filelist" title="Link to this definition"></a></dt>
+<dd><p>Retrieves a list of files from a specified folder and organizes them by project.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>folder (str): The path to the folder containing the files.</p>
+</dd>
+<dt>Returns:</dt><dd><p>tuple: A tuple containing the list of project names and a dictionary of file lists organized by project.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="all_to_db.get_rspace_workspace_folders">
+<span class="sig-prename descclassname"><span class="pre">all_to_db.</span></span><span class="sig-name descname"><span class="pre">get_rspace_workspace_folders</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sampleParameter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elnName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'rspace'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/all_to_db.html#get_rspace_workspace_folders"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#all_to_db.get_rspace_workspace_folders" title="Link to this definition"></a></dt>
+<dd><p>Fetches RSpace workspace folders using the API.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>sampleParameter (str): A sample parameter for the API request.
+elnName (str): The name of the ELN (default is ‘rspace’).</p>
+</dd>
+<dt>Returns:</dt><dd><p>dict: The JSON response containing the workspace folders.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="all_to_db.insert_egroupware">
+<span class="sig-prename descclassname"><span class="pre">all_to_db.</span></span><span class="sig-name descname"><span class="pre">insert_egroupware</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/all_to_db.html#insert_egroupware"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#all_to_db.insert_egroupware" title="Link to this definition"></a></dt>
+<dd><p>Fetches project data from eGroupWare and inserts it into a local database.</p>
+<p>Parameters:
+verbose (int): If set to 1, prints the project registration and schedule data.</p>
+<p>Returns:
+None</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="all_to_db.insert_rspace_to_db">
+<span class="sig-prename descclassname"><span class="pre">all_to_db.</span></span><span class="sig-name descname"><span class="pre">insert_rspace_to_db</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/all_to_db.html#insert_rspace_to_db"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#all_to_db.insert_rspace_to_db" title="Link to this definition"></a></dt>
+<dd><p>Fetches sample data from RSpace and inserts it into a local database.</p>
+<p>Parameters:
+None</p>
+<p>Returns:
+None</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="all_to_db.process_rspace_documents">
+<span class="sig-prename descclassname"><span class="pre">all_to_db.</span></span><span class="sig-name descname"><span class="pre">process_rspace_documents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">documents</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">table_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/all_to_db.html#process_rspace_documents"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#all_to_db.process_rspace_documents" title="Link to this definition"></a></dt>
+<dd><p>Process RSpace documents and insert them into the database.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>documents (dict): A dictionary containing the RSpace documents.
+db_name (str): The name of the database.
+table_name (str): The name of the table to insert the documents into.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="all_to_db.process_rspace_folder">
+<span class="sig-prename descclassname"><span class="pre">all_to_db.</span></span><span class="sig-name descname"><span class="pre">process_rspace_folder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">table_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/all_to_db.html#process_rspace_folder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#all_to_db.process_rspace_folder" title="Link to this definition"></a></dt>
+<dd><p>Process RSpace folders and insert them into the database.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>folders (dict): A dictionary containing the RSpace documents.
+db_name (str): The name of the database.
+table_name (str): The name of the table to insert the documents into.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="all_to_db.process_tags">
+<span class="sig-prename descclassname"><span class="pre">all_to_db.</span></span><span class="sig-name descname"><span class="pre">process_tags</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">table_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">object_document</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/all_to_db.html#process_tags"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#all_to_db.process_tags" title="Link to this definition"></a></dt>
+<dd><p>Process the tags of an RSpace document and insert them into the database.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>db_name (str): The name of the database.
+table_name (str): The name of the table to insert the tags into.
+doc (dict): The RSpace document.
+object_document (dict): The object document corresponding to the RSpace document.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="modules.html" class="btn btn-neutral float-left" title="RDM_system_connector" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="db_to_all_synced.html" class="btn btn-neutral float-right" title="db_to_all_synced module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, saibotMagd.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

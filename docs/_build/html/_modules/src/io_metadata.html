@@ -1,0 +1,345 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>src.io_metadata &mdash; RDM_system_connector documentation 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=2709fde1"></script>
+      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            RDM_system_connector documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">RDM_system_connector</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">RDM_system_connector documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">src.io_metadata</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for src.io_metadata</h1><div class="highlight"><pre>
+<span></span><span class="c1">##extract metadata from archive</span>
+<span class="kn">import</span> <span class="nn">tempfile</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="c1">#from joblib import Parallel, delayed</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span> <span class="nn">tarfile</span>
+<span class="kn">import</span> <span class="nn">zipfile</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span> <span class="c1"># type: ignore</span>
+<span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">clear_output</span> <span class="c1"># type: ignore</span>
+
+<span class="kn">import</span> <span class="nn">tarfile</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">tempfile</span>
+<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
+<span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">clear_output</span>
+
+<div class="viewcode-block" id="is_tar_archive">
+<a class="viewcode-back" href="../../src.html#src.io_metadata.is_tar_archive">[docs]</a>
+<span class="k">def</span> <span class="nf">is_tar_archive</span><span class="p">(</span><span class="n">file</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function checks if a file is a tar archive.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    file (str): The path to the file.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    bool: True if the file is a tar archive, False otherwise.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">tarfile</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">tar</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">except</span> <span class="n">tarfile</span><span class="o">.</span><span class="n">ReadError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="search_string_in_file">
+<a class="viewcode-back" href="../../src.html#src.io_metadata.search_string_in_file">[docs]</a>
+<span class="k">def</span> <span class="nf">search_string_in_file</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">search_string</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function searches for a string in a file.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    file (str): The path to the file.</span>
+<span class="sd">    search_string (str): The string to search for.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    str: The line containing the string if found, otherwise an empty string.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">textends</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;.json&#39;</span><span class="p">,</span> <span class="s1">&#39;.xml&#39;</span><span class="p">,</span> <span class="s1">&#39;.log&#39;</span><span class="p">,</span> <span class="s1">&#39;.rtf&#39;</span><span class="p">,</span> <span class="s1">&#39;.csv&#39;</span><span class="p">,</span> <span class="s1">&#39;.tsv&#39;</span><span class="p">]</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">file</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">textends</span><span class="p">)):</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">search_string</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                        <span class="k">return</span> <span class="n">line</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="get_inputlist">
+<a class="viewcode-back" href="../../src.html#src.io_metadata.get_inputlist">[docs]</a>
+<span class="k">def</span> <span class="nf">get_inputlist</span><span class="p">(</span><span class="n">folder</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function returns a list of files in a folder.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    folder (str): The path to the folder.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    list: A list of files in the folder.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">file_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">root</span><span class="p">,</span> <span class="n">dirs</span><span class="p">,</span> <span class="n">files</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">folder</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
+            <span class="n">file_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">file</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">file_list</span></div>
+
+
+<div class="viewcode-block" id="get_init">
+<a class="viewcode-back" href="../../src.html#src.io_metadata.get_init">[docs]</a>
+<span class="k">def</span> <span class="nf">get_init</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function reads the showinf parameters from a configuration file.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    tuple: A tuple containing the showinf path and parameters.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">import</span> <span class="nn">configparser</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">configparser</span><span class="o">.</span><span class="n">ConfigParser</span><span class="p">()</span>
+    <span class="n">config</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;init.ini&quot;</span><span class="p">)</span>
+    <span class="n">showinfPath</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;showinf parameter&#39;</span><span class="p">][</span><span class="s1">&#39;showinfPath&#39;</span><span class="p">]</span>
+    <span class="n">showinfParameter</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;showinf parameter&#39;</span><span class="p">][</span><span class="s1">&#39;showinfParameter&#39;</span><span class="p">]</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">showinfPath</span><span class="p">,</span> <span class="n">showinfParameter</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_bf_metadata">
+<a class="viewcode-back" href="../../src.html#src.io_metadata.get_bf_metadata">[docs]</a>
+<span class="k">def</span> <span class="nf">get_bf_metadata</span><span class="p">(</span><span class="n">fileinput</span><span class="p">,</span> <span class="n">showinfPath</span><span class="p">,</span> <span class="n">showinfParameter</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function extracts metadata from a file using the Bio-Formats showinf tool.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    fileinput (str): The path to the file.</span>
+<span class="sd">    showinfPath (str): The path to the showinf tool.</span>
+<span class="sd">    showinfParameter (str): The parameters for the showinf tool.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    bytes: The metadata extracted from the file.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">comd</span> <span class="o">=</span> <span class="p">[</span><span class="n">showinfPath</span><span class="p">]</span> <span class="o">+</span> <span class="n">showinfParameter</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+    <span class="n">comd</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">comd</span><span class="p">]</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span><span class="n">comd</span> <span class="o">+</span> <span class="p">[</span><span class="n">fileinput</span><span class="p">],</span>
+                                        <span class="n">shell</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                        <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">DEVNULL</span><span class="p">)</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">output</span></div>
+
+
+<div class="viewcode-block" id="save_to_xml">
+<a class="viewcode-back" href="../../src.html#src.io_metadata.save_to_xml">[docs]</a>
+<span class="k">def</span> <span class="nf">save_to_xml</span><span class="p">(</span><span class="n">concatMetadata</span><span class="p">,</span> <span class="n">outputfolder</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function saves a DataFrame to an XML file.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    concatMetadata (DataFrame): The DataFrame to save.</span>
+<span class="sd">    outputfolder (str): The path to the output folder.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">concatMetadata</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">concatMetadata</span><span class="p">))</span>
+    <span class="n">tmpConcat</span> <span class="o">=</span> <span class="n">concatMetadata</span><span class="o">.</span><span class="n">to_xml</span><span class="p">()</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">outputfolder</span><span class="p">,</span> <span class="s2">&quot;concat_extraction_results.xml&quot;</span><span class="p">),</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">out</span><span class="p">:</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">tmpConcat</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="save_metadata">
+<a class="viewcode-back" href="../../src.html#src.io_metadata.save_metadata">[docs]</a>
+<span class="k">def</span> <span class="nf">save_metadata</span><span class="p">(</span><span class="n">metadata</span><span class="p">,</span> <span class="n">outputfolder</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function saves metadata to a file.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    metadata (str): The metadata to save.</span>
+<span class="sd">    outputfolder (str): The path to the output folder.</span>
+<span class="sd">    filename (str): The name of the output file.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">outputfolder</span><span class="p">,</span> <span class="n">filename</span><span class="p">),</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">out</span><span class="p">:</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">metadata</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="extract_metadata">
+<a class="viewcode-back" href="../../src.html#src.io_metadata.extract_metadata">[docs]</a>
+<span class="k">def</span> <span class="nf">extract_metadata</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">outputfolder</span><span class="p">,</span> <span class="n">showinfPath</span><span class="p">,</span> <span class="n">showinfParameter</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function extracts metadata from a file and saves it to an output folder.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    file (str): The path to the file.</span>
+<span class="sd">    outputfolder (str): The path to the output folder.</span>
+<span class="sd">    showinfPath (str): The path to the showinf tool.</span>
+<span class="sd">    showinfParameter (str): The parameters for the showinf tool.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    list: A list containing the extraction error, input file, output file, extension, and output folder.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">metadata</span> <span class="o">=</span> <span class="n">get_bf_metadata</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">showinfPath</span><span class="p">,</span> <span class="n">showinfParameter</span><span class="p">)</span>
+    <span class="n">head</span><span class="p">,</span> <span class="n">extension</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">file</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="c1">#print(head, extension)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">extension</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">4</span><span class="p">:</span>
+         <span class="n">head</span> <span class="o">+=</span> <span class="n">extension</span>
+         <span class="n">extension</span> <span class="o">=</span> <span class="s2">&quot;unknown&quot;</span>
+    <span class="k">if</span> <span class="n">metadata</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+        <span class="n">metadata</span> <span class="o">=</span> <span class="n">metadata</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="n">head</span> <span class="o">+</span> <span class="s2">&quot;.ome.xml&quot;</span>
+        <span class="n">save_metadata</span><span class="p">(</span><span class="n">metadata</span><span class="p">,</span> <span class="n">outputfolder</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;saved: &quot;</span><span class="p">,</span> <span class="n">outputfolder</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">outputfolder</span><span class="p">,</span> <span class="n">filename</span><span class="p">),</span> <span class="n">extension</span><span class="p">,</span> <span class="n">outputfolder</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">extension</span><span class="p">,</span> <span class="n">outputfolder</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="process_tar_gz">
+<a class="viewcode-back" href="../../src.html#src.io_metadata.process_tar_gz">[docs]</a>
+<span class="k">def</span> <span class="nf">process_tar_gz</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">outputfolder</span><span class="p">,</span> <span class="n">tmp</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function processes a tar.gz file, extracts metadata from its contents, and saves the results to an output folder.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    file_path (str): The path to the tar.gz file.</span>
+<span class="sd">    outputfolder (str): The path to the output folder.</span>
+<span class="sd">    tmp (int): A flag indicating whether to use a temporary directory for extraction. Default is 1.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    DataFrame: A DataFrame containing the extraction results.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">showinfPath</span><span class="p">,</span> <span class="n">showinfParameter</span> <span class="o">=</span> <span class="n">get_init</span><span class="p">()</span>
+    <span class="n">resultCols</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;extractError&#39;</span><span class="p">,</span> <span class="s1">&#39;inputFile&#39;</span><span class="p">,</span> <span class="s1">&#39;outputFile&#39;</span><span class="p">,</span> <span class="s1">&#39;extension&#39;</span><span class="p">,</span> <span class="s1">&#39;outputFolder&#39;</span><span class="p">]</span>
+    <span class="n">concatMetadata</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">resultCols</span><span class="p">)</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c1"># Open the tar.gz file</span>
+    <span class="k">with</span> <span class="n">tarfile</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">tar</span><span class="p">:</span>
+        <span class="c1"># Create a temporary directory</span>
+        <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">()</span> <span class="k">as</span> <span class="n">temp_dir</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">tmp</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+                <span class="n">temp_dir</span> <span class="o">=</span> <span class="n">outputfolder</span>
+                <span class="c1"># Extract all files to the temporary directory</span>
+                <span class="k">for</span> <span class="n">member</span> <span class="ow">in</span> <span class="n">tar</span><span class="o">.</span><span class="n">getmembers</span><span class="p">():</span>
+                <span class="c1"># Check if the member is a file (not a directory)</span>
+                    <span class="k">if</span> <span class="n">member</span><span class="o">.</span><span class="n">isfile</span><span class="p">():</span>
+                    <span class="c1"># Extract the file as a file-like object</span>
+                        <span class="n">tar</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="n">member</span><span class="p">,</span> <span class="n">temp_dir</span><span class="p">)</span>
+                <span class="c1"># Iterate over all files in the temporary directory</span>
+                <span class="n">filelist</span> <span class="o">=</span> <span class="n">get_inputlist</span><span class="p">(</span><span class="n">temp_dir</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">enumerate</span><span class="p">(</span><span class="n">filelist</span><span class="p">)):</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;work on </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">filelist</span><span class="p">)</span><span class="si">}</span><span class="s2"> files in the archive (</span><span class="si">{</span><span class="n">i</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">filelist</span><span class="p">)</span><span class="si">}</span><span class="s2">%)&quot;</span><span class="p">)</span>
+                    <span class="c1"># Print the file name</span>
+                    <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">extract_metadata</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">outputfolder</span><span class="p">,</span> <span class="n">showinfPath</span><span class="p">,</span> <span class="n">showinfParameter</span><span class="p">))</span>
+                    <span class="n">clear_output</span><span class="p">(</span><span class="n">wait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="c1">## save the concat</span>
+    <span class="n">concatMetadata</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">resultCols</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">concatMetadata</span></div>
+
+
+                <span class="c1"># Here you can add your own code to process the file</span>
+
+<span class="c1"># Call the function with the path to your tar.gz file</span>
+<span class="c1">#process_tar_gz(&quot;/home/omero-import&quot;tmp/extract_metadata_test/ab22_20190529_MRI.tar.gz&quot;)</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">archive = &quot;/home/short_test/short.tar.xz&quot;</span>
+<span class="sd">#files = get_inputlist(&#39;/home/ab22_20190529_MRI&#39;)</span>
+<span class="sd">outputfolder = &#39;/home/short_test/short_metadata&#39;</span>
+
+<span class="sd">concatMetadata = process_tar_gz(archive, outputfolder)</span>
+<span class="sd">save_to_xml(concatMetadata, outputfolder)</span>
+<span class="sd">&quot;&quot;&quot;</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, saibotMagd.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

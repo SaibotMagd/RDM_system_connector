@@ -1,0 +1,563 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>db_to_all_synced &mdash; RDM_system_connector documentation 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=2709fde1"></script>
+      <script src="../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            RDM_system_connector documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">RDM_system_connector</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">RDM_system_connector documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Module code</a></li>
+      <li class="breadcrumb-item active">db_to_all_synced</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for db_to_all_synced</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># coding: utf-8</span>
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">itertools</span>
+<span class="kn">from</span> <span class="nn">src.io_functions</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">data</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">omero.clients</span>
+<span class="kn">from</span> <span class="nn">omero.gateway</span> <span class="kn">import</span> <span class="n">BlitzGateway</span>
+<span class="kn">import</span> <span class="nn">importlib</span>
+<span class="kn">import</span> <span class="nn">sqlite3</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">timedelta</span>
+
+<div class="viewcode-block" id="create_links">
+<a class="viewcode-back" href="../db_to_all_synced.html#db_to_all_synced.create_links">[docs]</a>
+<span class="k">def</span> <span class="nf">create_links</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates links between different data sources in the database.</span>
+
+<span class="sd">    This function deletes duplicate objects, tags, and links, and then creates links between</span>
+<span class="sd">    eGroupWare and Netstore, and between eGroupWare and OMERO based on overlapping data.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">delete_duplicate_objects</span><span class="p">()</span>
+    <span class="n">delete_duplicate_tags</span><span class="p">()</span>
+    <span class="n">delete_duplicate_links</span><span class="p">()</span>
+
+    <span class="n">db_name</span> <span class="o">=</span> <span class="s1">&#39;sync_database.db&#39;</span>
+    <span class="n">check_db_table</span><span class="p">(</span><span class="n">db_name</span><span class="p">,</span> <span class="s2">&quot;link&quot;</span><span class="p">)</span>
+    <span class="n">omero_df</span> <span class="o">=</span> <span class="n">get_dataframe</span><span class="p">(</span><span class="s1">&#39;omero&#39;</span><span class="p">)</span>
+    <span class="n">fs_storage_df</span> <span class="o">=</span> <span class="n">get_dataframe</span><span class="p">(</span><span class="s2">&quot;fs_storage&quot;</span><span class="p">)</span>
+    <span class="c1"># link_df = get_dataframe(&quot;link&quot;)</span>
+    <span class="n">egroupware_df</span> <span class="o">=</span> <span class="n">get_dataframe</span><span class="p">(</span><span class="s2">&quot;egroupware&quot;</span><span class="p">)</span>
+    <span class="c1"># Get project name and files from database per object_id</span>
+    <span class="c1"># (fs_storage_df[&#39;object_id&#39;] restricted to &quot;fs_storage&quot;)</span>
+    <span class="c1"># netstore_joined_df = get_netstore_data(db_name, 919)</span>
+    <span class="n">netstore_df</span> <span class="o">=</span> <span class="n">get_dataframe</span><span class="p">(</span><span class="s1">&#39;fs_storage&#39;</span><span class="p">)</span>
+    <span class="n">omero_df</span> <span class="o">=</span> <span class="n">get_dataframe</span><span class="p">(</span><span class="s1">&#39;omero&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Create the link(s):</span>
+
+    <span class="n">check_db_table</span><span class="p">(</span><span class="n">db_name</span><span class="p">,</span> <span class="s1">&#39;link&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Create the links in the database between eGroupWare and Netstore</span>
+    <span class="k">for</span> <span class="n">project_id</span> <span class="ow">in</span> <span class="n">egroupware_df</span><span class="p">[</span><span class="s1">&#39;project_id&#39;</span><span class="p">]:</span>
+        <span class="c1"># print(&quot;project_id&quot;, project_id, &quot;: project_name: &quot;, egroupware_df[egroupware_df[&#39;project_id&#39;] == project_id][&#39;project_name&#39;].iloc[0])</span>
+        <span class="k">for</span> <span class="n">object_id</span> <span class="ow">in</span> <span class="n">netstore_df</span><span class="p">[</span><span class="s1">&#39;object_id&#39;</span><span class="p">]:</span>
+            <span class="n">netstore_joined_df</span> <span class="o">=</span> <span class="n">get_netstore_data</span><span class="p">(</span><span class="n">db_name</span><span class="p">,</span> <span class="n">object_id</span><span class="p">)</span>
+            <span class="n">egroupware_joined_df</span> <span class="o">=</span> <span class="n">get_egroupware_data</span><span class="p">(</span><span class="n">db_name</span><span class="p">,</span> <span class="n">project_id</span><span class="p">)</span>
+            <span class="n">overlap_df</span> <span class="o">=</span> <span class="n">get_col_overlap_df</span><span class="p">(</span>
+                <span class="n">netstore_joined_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">],</span> <span class="n">egroupware_joined_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;object_name_x&#39;</span><span class="p">,</span> <span class="s1">&#39;project_name&#39;</span><span class="p">)</span>
+            <span class="n">check</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">overlap_df</span><span class="p">[</span><span class="s1">&#39;percentage&#39;</span><span class="p">]):</span>
+                <span class="k">if</span> <span class="n">p</span> <span class="o">&gt;=</span> <span class="mf">0.8</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;I matched the eGroupWare-Netstore: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">egroupware_joined_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;project_name&#39;</span><span class="p">])</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">netstore_joined_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;object_name_x&#39;</span><span class="p">])</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">p</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="c1"># check = 1</span>
+
+                    <span class="n">link</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;src_id&#39;</span><span class="p">:</span> <span class="n">project_id</span><span class="p">,</span>
+                            <span class="s1">&#39;src_table&#39;</span><span class="p">:</span> <span class="s1">&#39;project_registration&#39;</span><span class="p">,</span>
+                            <span class="s1">&#39;tar_id&#39;</span><span class="p">:</span> <span class="n">object_id</span><span class="p">,</span>
+                            <span class="s1">&#39;tar_table&#39;</span><span class="p">:</span> <span class="s1">&#39;object&#39;</span><span class="p">,</span>
+                            <span class="s1">&#39;tar_source&#39;</span><span class="p">:</span> <span class="s1">&#39;fs_storage&#39;</span><span class="p">,</span>
+                            <span class="s1">&#39;overlap_ratio&#39;</span><span class="p">:</span> <span class="n">p</span><span class="p">,</span>
+                            <span class="s1">&#39;manual_validated&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                            <span class="s1">&#39;created_timestamp&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">),</span>
+                            <span class="s1">&#39;modified_timestamp&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">),</span>
+                            <span class="s1">&#39;notes&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">egroupware_joined_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;project_name&#39;</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">netstore_joined_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;object_name_x&#39;</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> object[source == &#39;fs_storage&#39;] get_col_overlap_df(netstore_joined_df.iloc[0:1], egroupware_joined_df.iloc[0:1], &#39;object_name_x&#39;, &#39;project_name&#39;)&quot;</span><span class="p">}</span>
+                    <span class="c1"># print(link)</span>
+                    <span class="n">insert_dict_to_database</span><span class="p">(</span><span class="n">db_name</span><span class="p">,</span> <span class="s1">&#39;link&#39;</span><span class="p">,</span> <span class="n">link</span><span class="p">)</span>
+
+    <span class="c1"># Create the links between eGroupWare and OMERO in the database</span>
+    <span class="k">for</span> <span class="n">project_id</span> <span class="ow">in</span> <span class="n">egroupware_df</span><span class="p">[</span><span class="s1">&#39;project_id&#39;</span><span class="p">]:</span>
+        <span class="c1"># print(&quot;project_id&quot;, project_id, &quot;: project_name: &quot;, egroupware_df[egroupware_df[&#39;project_id&#39;] == project_id][&#39;project_name&#39;].iloc[0])</span>
+        <span class="k">for</span> <span class="n">object_id</span> <span class="ow">in</span> <span class="n">omero_df</span><span class="p">[</span><span class="s1">&#39;object_id&#39;</span><span class="p">]:</span>
+            <span class="n">omero_joined_df</span> <span class="o">=</span> <span class="n">omero_df</span><span class="p">[</span><span class="n">omero_df</span><span class="p">[</span><span class="s1">&#39;object_id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">object_id</span><span class="p">]</span>
+            <span class="n">omero_joined_df</span> <span class="o">=</span> <span class="n">omero_joined_df</span><span class="p">[</span><span class="n">omero_joined_df</span><span class="p">[</span><span class="s1">&#39;object_type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Project&#39;</span><span class="p">]</span>
+            <span class="n">egroupware_joined_df</span> <span class="o">=</span> <span class="n">get_egroupware_data</span><span class="p">(</span><span class="n">db_name</span><span class="p">,</span> <span class="n">project_id</span><span class="p">)</span>
+            <span class="n">overlap_df</span> <span class="o">=</span> <span class="n">get_col_overlap_df</span><span class="p">(</span>
+                <span class="n">egroupware_joined_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">],</span> <span class="n">omero_joined_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;project_name&#39;</span><span class="p">,</span> <span class="s1">&#39;object_name&#39;</span><span class="p">)</span>
+            <span class="n">check</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">overlap_df</span><span class="p">[</span><span class="s1">&#39;percentage&#39;</span><span class="p">]):</span>
+                <span class="k">if</span> <span class="n">p</span> <span class="o">&gt;=</span> <span class="mf">0.8</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;I matched the eGroupWare-OMERO: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">egroupware_joined_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;project_name&#39;</span><span class="p">])</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">omero_joined_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;object_name&#39;</span><span class="p">])</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">p</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="c1"># check = 1</span>
+
+                    <span class="n">link</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;src_id&#39;</span><span class="p">:</span> <span class="n">project_id</span><span class="p">,</span>
+                            <span class="s1">&#39;src_table&#39;</span><span class="p">:</span> <span class="s1">&#39;project_registration&#39;</span><span class="p">,</span>
+                            <span class="s1">&#39;tar_id&#39;</span><span class="p">:</span> <span class="n">object_id</span><span class="p">,</span>
+                            <span class="s1">&#39;tar_table&#39;</span><span class="p">:</span> <span class="s1">&#39;object&#39;</span><span class="p">,</span>
+                            <span class="s1">&#39;tar_source&#39;</span><span class="p">:</span> <span class="s1">&#39;omero&#39;</span><span class="p">,</span>
+                            <span class="s1">&#39;overlap_ratio&#39;</span><span class="p">:</span> <span class="n">p</span><span class="p">,</span>
+                            <span class="s1">&#39;manual_validated&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                            <span class="s1">&#39;created_timestamp&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">),</span>
+                            <span class="s1">&#39;modified_timestamp&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">),</span>
+                            <span class="s1">&#39;notes&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">egroupware_joined_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;project_name&#39;</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">omero_joined_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;object_name&#39;</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">; object[source == &#39;omero&#39;]; get_col_overlap_df(egroupware_joined_df.iloc[0:1], omero_joined_df.iloc[0:1], &#39;project_name&#39;, &#39;object_name&#39;)&quot;</span><span class="p">}</span>
+                    <span class="c1"># print(link)</span>
+                    <span class="n">insert_dict_to_database</span><span class="p">(</span><span class="n">db_name</span><span class="p">,</span> <span class="s1">&#39;link&#39;</span><span class="p">,</span> <span class="n">link</span><span class="p">)</span>
+
+    <span class="n">delete_duplicate_objects</span><span class="p">()</span>
+    <span class="n">delete_duplicate_tags</span><span class="p">()</span>
+    <span class="n">delete_duplicate_links</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="sync_omero">
+<a class="viewcode-back" href="../db_to_all_synced.html#db_to_all_synced.sync_omero">[docs]</a>
+<span class="k">def</span> <span class="nf">sync_omero</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Synchronizes OMERO data with the database and performs necessary operations.</span>
+
+<span class="sd">    This function inserts OMERO data into the database, creates links between different data sources,</span>
+<span class="sd">    and synchronizes the data with OMERO.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">auto_insert_omero_to_database</span><span class="p">()</span>
+    <span class="n">db_name</span> <span class="o">=</span> <span class="s1">&#39;sync_database.db&#39;</span>
+    <span class="n">docker_vol_path</span> <span class="o">=</span> <span class="s2">&quot;/OMERO&quot;</span>
+    <span class="c1"># netstore_joined_df = get_netstore_data(db_name, 919)</span>
+    <span class="n">netstore_df</span> <span class="o">=</span> <span class="n">get_dataframe</span><span class="p">(</span><span class="s1">&#39;fs_storage&#39;</span><span class="p">)</span>
+    <span class="n">omero_df</span> <span class="o">=</span> <span class="n">get_dataframe</span><span class="p">(</span><span class="s1">&#39;omero&#39;</span><span class="p">)</span>
+    <span class="n">link_df</span> <span class="o">=</span> <span class="n">get_dataframe</span><span class="p">(</span><span class="s1">&#39;link-fs_storage&#39;</span><span class="p">)</span>
+    <span class="n">conn</span> <span class="o">=</span> <span class="n">BlitzGateway</span><span class="p">(</span><span class="s1">&#39;inplace&#39;</span><span class="p">,</span> <span class="s1">&#39;omero&#39;</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="s1">&#39;0.0.0.0&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">4064</span><span class="p">)</span>
+    <span class="n">conn</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+    <span class="c1"># tags = conn.getObjects(&quot;TagAnnotation&quot;)</span>
+    <span class="c1"># Auto insert linked entries to OMERO and RSpace</span>
+    <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">link_df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+        <span class="k">if</span> <span class="nb">float</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;overlap_ratio&#39;</span><span class="p">])</span> <span class="o">&gt;=</span> <span class="mf">0.8</span><span class="p">:</span>
+            <span class="c1"># Get a dataframe with eGroupWare info for a specific link</span>
+            <span class="n">src_df</span> <span class="o">=</span> <span class="n">get_link_object_from_id</span><span class="p">(</span>
+                <span class="n">db_name</span><span class="p">,</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;src_table&#39;</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;src_id&#39;</span><span class="p">])</span>
+            <span class="c1"># Get a dataframe with Netstore info for a specific link</span>
+            <span class="n">tar_df</span> <span class="o">=</span> <span class="n">get_link_object_from_id</span><span class="p">(</span>
+                <span class="n">db_name</span><span class="p">,</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;tar_table&#39;</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;tar_id&#39;</span><span class="p">])</span>
+            <span class="c1"># Set the name variable to the project name from eGroupWare</span>
+            <span class="c1"># TODO: (add an artificial &quot;_new&quot; because it already exists, to test the creation)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">egroupware_project_name</span> <span class="o">=</span> <span class="n">src_df</span><span class="p">[</span><span class="s1">&#39;project_name&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">omero_project_name</span> <span class="o">=</span> <span class="n">egroupware_project_name</span>
+                <span class="n">fs_storage_project_folder</span> <span class="o">=</span> <span class="n">tar_df</span><span class="p">[</span><span class="s1">&#39;object_name&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;wrong target df!&quot;</span><span class="p">,</span> <span class="n">row</span><span class="p">)</span>
+                <span class="k">continue</span>
+            <span class="c1"># TODO: lern_multi3 is too large to fast import in OMERO so skip it!</span>
+            <span class="c1"># if fs_storage_project_folder == &quot;zlern_multi3&quot;:</span>
+            <span class="c1">#    continue</span>
+
+            <span class="c1">#############################################################################</span>
+            <span class="c1">#### OMERO Sync #############################################################</span>
+            <span class="c1"># Check if project already exists in OMERO</span>
+            <span class="c1"># search_result = omero_df[omero_df[&#39;project&#39;].str.contains(egroupware_project_name)]</span>
+            <span class="c1"># if search_result.empty:</span>
+            <span class="c1"># If the project already exists in OMERO, don&#39;t create it again</span>
+            <span class="n">project_id</span> <span class="o">=</span> <span class="n">get_object_by_name</span><span class="p">(</span><span class="n">egroupware_project_name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">check_for_omero_entries</span><span class="p">(</span><span class="n">db_name</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">tar_df</span><span class="p">[</span><span class="s1">&#39;object_name&#39;</span><span class="p">])[</span><span class="mi">0</span><span class="p">],</span> <span class="n">object_type</span><span class="o">=</span><span class="s2">&quot;Project&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">empty</span> <span class="ow">and</span> <span class="n">project_id</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;I create: &quot;</span><span class="p">,</span> <span class="n">egroupware_project_name</span><span class="p">)</span>
+                <span class="n">project</span> <span class="o">=</span> <span class="n">create_object</span><span class="p">(</span>
+                    <span class="n">egroupware_project_name</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;Project&quot;</span><span class="p">)</span>
+                <span class="n">project_id</span> <span class="o">=</span> <span class="n">project</span><span class="o">.</span><span class="n">getId</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="c1"># Get the path of the images to take it as dataset inside the project</span>
+            <span class="c1"># TODO: Use every specific path for every image (currently it just uses the longest path)</span>
+            <span class="c1"># TODO: Add the real server path as key:value; also all the other non-bioformat/non-importable data as key:value pairs with links</span>
+            <span class="n">src</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;/fs_storage_omero-import/</span><span class="si">{</span><span class="n">fs_storage_project_folder</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="n">base_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;/home/omero-import/</span><span class="si">{</span><span class="n">fs_storage_project_folder</span><span class="si">}</span><span class="s2">&quot;</span>
+
+            <span class="n">filelist</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">get_dataset_fs_storage_name</span><span class="p">(</span>
+                <span class="n">db_name</span><span class="p">,</span> <span class="n">base_path</span><span class="p">)[</span><span class="s1">&#39;object_name&#39;</span><span class="p">])</span>
+            <span class="n">filelist</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">filelist</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="nb">len</span><span class="p">)</span>
+            <span class="n">fs_storage_dataset_folder</span> <span class="o">=</span> <span class="n">get_remaining_path</span><span class="p">(</span>
+                <span class="n">filelist</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">base_path</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;fs_storage_project_folder = </span><span class="si">{</span><span class="n">fs_storage_project_folder</span><span class="si">}</span><span class="s2">; </span><span class="se">\n</span><span class="s2"> fs_storage_dataset_folder = </span><span class="si">{</span><span class="n">fs_storage_dataset_folder</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="n">project</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">getObject</span><span class="p">(</span><span class="s2">&quot;Project&quot;</span><span class="p">,</span> <span class="n">project_id</span><span class="p">)</span>
+            <span class="n">dataset_id</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+            <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">project</span><span class="o">.</span><span class="n">listChildren</span><span class="p">():</span>
+                <span class="n">dataset</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">getObject</span><span class="p">(</span><span class="s2">&quot;Dataset&quot;</span><span class="p">,</span> <span class="n">child</span><span class="o">.</span><span class="n">getId</span><span class="p">())</span>
+                <span class="n">dataset_id</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">getId</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">dataset_id</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+                <span class="n">dataset</span> <span class="o">=</span> <span class="n">create_object</span><span class="p">(</span><span class="n">fs_storage_dataset_folder</span><span class="p">,</span> <span class="s2">&quot;Dataset&quot;</span><span class="p">)</span>
+                <span class="n">dataset_id</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">getId</span><span class="p">()</span>
+                <span class="n">create_link</span><span class="p">(</span><span class="n">project</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="s2">&quot;projectdataset&quot;</span><span class="p">)</span>
+                <span class="n">create_bulk_import_file</span><span class="p">(</span><span class="n">dataset_id</span><span class="p">,</span>
+                                        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                                            <span class="n">src</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">fs_storage_dataset_folder</span><span class="p">),</span>
+                                        <span class="n">docker_vol_path</span><span class="o">=</span><span class="s2">&quot;/NETSTORE_omero-import&quot;</span>
+                                        <span class="p">)</span>
+            <span class="c1"># print(f&quot;try to import: {src} into {project_id}:{dataset.getId()}&quot;)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;I add to dataset_id = &quot;</span><span class="p">,</span> <span class="n">dataset_id</span><span class="p">,</span>
+                  <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">src</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">fs_storage_dataset_folder</span><span class="p">))</span>
+            <span class="c1"># src path includes the &quot;real folder of the project&quot;, but for import you need to include the docker volume mainfolder</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            omero_inplace_import(dataset_id,</span>
+<span class="sd">                                 os.path.join(</span>
+<span class="sd">                                     src.split(&quot;/&quot;)[-1], fs_storage_dataset_folder),</span>
+<span class="sd">                                 docker_vol_path=&#39;/NETSTORE_omero-import&#39;,</span>
+<span class="sd">                                 server=&quot;localhost&quot;,</span>
+<span class="sd">                                 username=&quot;inplace&quot;,</span>
+<span class="sd">                                 password=&quot;omero&quot;)</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="c1"># Create the tags from link_df in OMERO and link it to the specific projects</span>
+            <span class="c1"># Check if tag already exists:</span>
+            <span class="n">tag_tuple</span> <span class="o">=</span> <span class="n">get_tags_tuple</span><span class="p">(</span><span class="n">conn</span><span class="p">)</span>
+
+            <span class="c1"># Split the tags string using both separators: &quot;-&quot; &amp; &quot;,&quot;</span>
+            <span class="c1"># possible_tags = [item for sublist in row[&#39;egroupware_df-egroupware_df_tags&#39;].split(&#39;-&#39;) for item in sublist.split(&#39;,&#39;)]</span>
+            <span class="c1"># possible_tags =</span>
+            <span class="n">tag_df</span> <span class="o">=</span> <span class="n">get_tags_from_id</span><span class="p">(</span>
+                <span class="n">db_name</span><span class="p">,</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;tar_id&#39;</span><span class="p">],</span> <span class="n">df_type</span><span class="o">=</span><span class="s1">&#39;fs_storage&#39;</span><span class="p">)</span>
+            <span class="n">possible_tags</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">tag_df</span><span class="p">[</span><span class="s1">&#39;translated_tag_name&#39;</span><span class="p">])</span>
+            <span class="c1"># print(possible_tags)</span>
+            <span class="n">tag_descriptions_dict</span> <span class="o">=</span> <span class="n">get_description_dict</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">p_tag</span> <span class="ow">in</span> <span class="n">possible_tags</span><span class="p">:</span>
+                <span class="n">tag_id</span> <span class="o">=</span> <span class="n">is_string_in_list</span><span class="p">(</span><span class="n">p_tag</span><span class="p">,</span> <span class="n">tag_tuple</span><span class="p">)</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">tag_id</span><span class="p">:</span>
+                        <span class="n">description</span> <span class="o">=</span> <span class="n">get_tag_description</span><span class="p">(</span>
+                            <span class="n">p_tag</span><span class="p">,</span> <span class="n">tag_descriptions_dict</span><span class="p">)</span>
+                        <span class="n">tag</span> <span class="o">=</span> <span class="n">create_tag</span><span class="p">(</span><span class="n">p_tag</span><span class="p">,</span> <span class="n">description</span><span class="p">)</span>
+                        <span class="n">create_link</span><span class="p">(</span><span class="n">project</span><span class="p">,</span> <span class="n">tag</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;add tag to project </span><span class="si">{</span><span class="n">project</span><span class="o">.</span><span class="n">getId</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                        <span class="n">tag</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">getObject</span><span class="p">(</span><span class="s2">&quot;TagAnnotation&quot;</span><span class="p">,</span> <span class="n">tag_id</span><span class="p">)</span>
+                        <span class="n">create_link</span><span class="p">(</span><span class="n">project</span><span class="p">,</span> <span class="n">tag</span><span class="p">)</span>
+                <span class="k">except</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;tag processing error in OMERO db&quot;</span><span class="p">)</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Import has to be done before RSpace</span>
+    <span class="n">auto_insert_omero_to_database</span><span class="p">()</span>
+    <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="c1"># TODO: Make the bulk import work (can&#39;t copy the import-list file, rights issues)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">omero_inplace_bulk_import</span><span class="p">(</span><span class="n">bulk_file_src_path</span><span class="o">=</span><span class="s2">&quot;./data/image_import_files.csv&quot;</span><span class="p">,</span>
+                                  <span class="n">bulk_file_tar_path</span><span class="o">=</span><span class="s2">&quot;/home/cni/slicer-omero/omero_server_volume&quot;</span><span class="p">,</span>
+                                  <span class="n">docker_vol_path</span><span class="o">=</span><span class="n">docker_vol_path</span><span class="p">,</span>
+                                  <span class="n">server</span><span class="o">=</span><span class="s2">&quot;localhost&quot;</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="s2">&quot;inplace&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;omero&quot;</span><span class="p">)</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;no bulk import files, file!, so nothing to import to OMERO&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="sync_rspace">
+<a class="viewcode-back" href="../db_to_all_synced.html#db_to_all_synced.sync_rspace">[docs]</a>
+<span class="k">def</span> <span class="nf">sync_rspace</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Synchronizes RSpace data with the database and performs necessary operations.</span>
+
+<span class="sd">    This function retrieves data from the database, creates links between different data sources,</span>
+<span class="sd">    and synchronizes the data with RSpace.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">netstore_df</span> <span class="o">=</span> <span class="n">get_dataframe</span><span class="p">(</span><span class="s1">&#39;fs_storage&#39;</span><span class="p">)</span>
+    <span class="n">omero_df</span> <span class="o">=</span> <span class="n">get_dataframe</span><span class="p">(</span><span class="s1">&#39;omero&#39;</span><span class="p">)</span>
+    <span class="n">link_df</span> <span class="o">=</span> <span class="n">get_dataframe</span><span class="p">(</span><span class="s1">&#39;link-fs_storage&#39;</span><span class="p">)</span>
+    <span class="n">conn</span> <span class="o">=</span> <span class="n">BlitzGateway</span><span class="p">(</span><span class="s1">&#39;inplace&#39;</span><span class="p">,</span> <span class="s1">&#39;omero&#39;</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="s1">&#39;0.0.0.0&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">4064</span><span class="p">)</span>
+    <span class="n">conn</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+    <span class="c1"># tags = conn.getObjects(&quot;TagAnnotation&quot;)</span>
+    <span class="c1"># Auto insert linked entries to OMERO and RSpace</span>
+    <span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">link_df</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">link_df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+        <span class="k">if</span> <span class="nb">float</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;overlap_ratio&#39;</span><span class="p">])</span> <span class="o">&gt;=</span> <span class="mf">0.8</span><span class="p">:</span>
+            <span class="c1"># Get a dataframe with eGroupWare info for a specific link</span>
+            <span class="n">src_df</span> <span class="o">=</span> <span class="n">get_link_object_from_id</span><span class="p">(</span>
+                <span class="n">db_name</span><span class="p">,</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;src_table&#39;</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;src_id&#39;</span><span class="p">])</span>
+            <span class="c1"># Get a dataframe with Netstore info for a specific link</span>
+            <span class="n">tar_df</span> <span class="o">=</span> <span class="n">get_link_object_from_id</span><span class="p">(</span>
+                <span class="n">db_name</span><span class="p">,</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;tar_table&#39;</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;tar_id&#39;</span><span class="p">])</span>
+            <span class="c1"># Set the name variable to the project name from eGroupWare</span>
+            <span class="c1"># TODO: (add an artificial &quot;_new&quot; because it already exists, to test the creation)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">egroupware_project_name</span> <span class="o">=</span> <span class="n">src_df</span><span class="p">[</span><span class="s1">&#39;project_name&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">omero_project_name</span> <span class="o">=</span> <span class="n">egroupware_project_name</span>
+                <span class="n">fs_storage_project_folder</span> <span class="o">=</span> <span class="n">tar_df</span><span class="p">[</span><span class="s1">&#39;object_name&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;no target df!&quot;</span><span class="p">,</span> <span class="n">row</span><span class="p">)</span>
+                <span class="k">continue</span>
+            <span class="c1"># TODO: lern_multi3 is too large to fast import in OMERO so skip it!</span>
+            <span class="c1"># if fs_storage_project_folder == &quot;zlern_multi3&quot;:</span>
+            <span class="c1">#    continue</span>
+
+            <span class="c1">##############################################################################</span>
+            <span class="c1">#### RSpace Sync #############################################################</span>
+            <span class="c1"># Placeholder variable to print if a folder and/or document is being created</span>
+            <span class="n">new</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;fs_storage_folder: &quot;</span><span class="p">,</span> <span class="n">fs_storage_project_folder</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;egroupware_project_name: &quot;</span><span class="p">,</span> <span class="n">egroupware_project_name</span><span class="p">)</span>
+            <span class="n">tag_df</span> <span class="o">=</span> <span class="n">get_tags_from_id</span><span class="p">(</span>
+                <span class="n">db_name</span><span class="p">,</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;tar_id&#39;</span><span class="p">],</span> <span class="n">df_type</span><span class="o">=</span><span class="s1">&#39;fs_storage&#39;</span><span class="p">)</span>
+            <span class="n">possible_tags</span> <span class="o">=</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">tag_df</span><span class="p">[</span><span class="s1">&#39;translated_tag_name&#39;</span><span class="p">]))</span>
+
+            <span class="n">header</span> <span class="o">=</span> <span class="n">create_rspace_document_header</span><span class="p">(</span>
+                <span class="n">egroupware_project_name</span><span class="p">,</span> <span class="n">fs_storage_project_folder</span><span class="p">,</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;overlap_ratio&#39;</span><span class="p">])</span>
+            <span class="n">files</span> <span class="o">=</span> <span class="n">create_rspace_files_table</span><span class="p">(</span>
+                <span class="n">header</span><span class="p">,</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;tar_id&#39;</span><span class="p">],</span> <span class="n">db_name</span><span class="o">=</span><span class="s1">&#39;sync_database.db&#39;</span><span class="p">)</span>
+            <span class="c1"># If there are no files in the possible document inside the folder, don&#39;t create it</span>
+            <span class="k">if</span> <span class="n">files</span> <span class="o">==</span> <span class="p">[]:</span>
+                <span class="k">continue</span>
+
+            <span class="n">html_table</span> <span class="o">=</span> <span class="n">generate_html_table</span><span class="p">(</span><span class="n">files</span><span class="p">,</span> <span class="n">header</span><span class="p">)</span>
+            <span class="c1"># Check if a folder sharing the same name of egroupware_project_name already exists:</span>
+            <span class="n">folder_json</span> <span class="o">=</span> <span class="n">search_folder</span><span class="p">(</span><span class="n">egroupware_project_name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">folder_json</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">new</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+                <span class="c1"># Create the folder in RSpace named by egroupware_project</span>
+                <span class="n">folder_json</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span>
+                    <span class="n">create_rspace_folder</span><span class="p">(</span><span class="n">egroupware_project_name</span><span class="p">))</span>
+            <span class="c1"># Create the notebook in RSpace named by fs_storage_folder name</span>
+            <span class="c1"># Use dataset as document name in RSpace</span>
+            <span class="n">src</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;/fs_storage_omero-import/</span><span class="si">{</span><span class="n">fs_storage_project_folder</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="n">base_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;/home/omero-import/</span><span class="si">{</span><span class="n">fs_storage_project_folder</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="n">filelist</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">get_dataset_fs_storage_name</span><span class="p">(</span>
+                <span class="n">db_name</span><span class="p">,</span> <span class="n">base_path</span><span class="p">)[</span><span class="s1">&#39;object_name&#39;</span><span class="p">])</span>
+            <span class="n">filelist</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">filelist</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="nb">len</span><span class="p">)</span>
+            <span class="n">fs_storage_dataset_folder</span> <span class="o">=</span> <span class="n">get_remaining_path</span><span class="p">(</span>
+                <span class="n">filelist</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">base_path</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+            <span class="n">document_json</span> <span class="o">=</span> <span class="n">search_documents</span><span class="p">(</span><span class="n">fs_storage_dataset_folder</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">document_json</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">new</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+                <span class="c1"># Create a document in RSpace named by egroupware_project</span>
+                <span class="n">document_json</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">create_rspace_document</span><span class="p">(</span>
+                    <span class="n">fs_storage_dataset_folder</span><span class="p">,</span> <span class="n">html_table</span><span class="p">,</span> <span class="n">folder_json</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">],</span> <span class="n">possible_tags</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">new</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;I created a new folder: </span><span class="si">{</span><span class="n">egroupware_project_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">new</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;I created a new document: </span><span class="si">{</span><span class="n">fs_storage_dataset_folder</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="s2">&quot;########################################################################################&quot;</span><span class="p">)</span>
+
+    <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="main">
+<a class="viewcode-back" href="../db_to_all_synced.html#db_to_all_synced.main">[docs]</a>
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Main function to execute the synchronization process.</span>
+
+<span class="sd">    This function removes the OMERO import file if it exists, creates links between different data sources,</span>
+<span class="sd">    and synchronizes the data with OMERO and RSpace.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s2">&quot;./data/image_import_files.csv&quot;</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s2">&quot;./data/image_import_files.csv&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;OMERO import file already reset&quot;</span><span class="p">)</span>
+    <span class="n">create_links</span><span class="p">()</span>
+    <span class="n">sync_omero</span><span class="p">()</span>
+    <span class="n">sync_rspace</span><span class="p">()</span></div>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">if __name__ == &quot;__main__&quot;:</span>
+<span class="sd">    db_name = &#39;sync_database.db&#39;</span>
+<span class="sd">    docker_vol_path = &quot;/OMERO&quot;</span>
+<span class="sd">    main()</span>
+<span class="sd">&quot;&quot;&quot;</span>
+    
+<span class="c1"># TODO: clear the trash code below (if its trash)</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">    # old code: should not work</span>
+<span class="sd">    # auto insert linked entries rspace</span>
+
+<span class="sd">    link_df = get_dataframe(&quot;link&quot;)</span>
+<span class="sd">    print(link_df.head())</span>
+<span class="sd">    fs_storage_df = get_dataframe(&quot;fs_storage&quot;)</span>
+
+<span class="sd">    for index, row in link_df.iterrows():</span>
+<span class="sd">        new = [0, 0]</span>
+<span class="sd">        if float(row[&#39;percentage0&#39;]) &gt;= 0.8:</span>
+<span class="sd">            # scrap the possible omero_project_name &amp; the actual folder on fs_storage from diff column in link_df</span>
+<span class="sd">            tmp = row.iloc[0].split(&quot;(&quot;)</span>
+<span class="sd">            egroupware_project_name = tmp[0].strip()</span>
+<span class="sd">            if len(egroupware_project_name.split(&quot;-&quot;)) &gt; 1:</span>
+<span class="sd">                egroupware_project_name = egroupware_project_name.split(&quot;-&quot;)[0]</span>
+<span class="sd">            tmp = tmp[-1].split(&quot;)&quot;)</span>
+<span class="sd">            # it gives the filesystem folder for</span>
+<span class="sd">            if tmp[-1][1] == &quot;-&quot;:</span>
+<span class="sd">                fs_storage_folder = tmp[-1][1:].strip()</span>
+<span class="sd">            else:</span>
+<span class="sd">                fs_storage_folder = tmp[-1].split(&quot;-&quot;)[-1]</span>
+
+<span class="sd">            print(&quot;fs_storage_folder: &quot;, fs_storage_folder)</span>
+<span class="sd">            print(&quot;egroupware_project_name: &quot;, egroupware_project_name)</span>
+<span class="sd">            header = f&quot;&lt;p&gt;egroupware_project_name: {egroupware_project_name}\n&lt;/p&gt;&quot;</span>
+<span class="sd">            header += f&quot;&lt;p&gt;fs_storage_folder: {fs_storage_folder}\n&lt;/p&gt;&quot;</span>
+<span class="sd">            header += f&quot;&lt;p&gt;similarity ratio (egroupware_project_name; ntstore_folder): {row[&#39;percentage0&#39;]}\n&lt;/p&gt;&quot;</span>
+<span class="sd">            # create placeholder html_table</span>
+<span class="sd">            html_table = generate_html_table(files, header)</span>
+<span class="sd">            # check if a folder sharing the same name of egroupware_project_name already exists:</span>
+<span class="sd">            folder_json = search_folder(egroupware_project_name)</span>
+<span class="sd">            if folder_json == 1:</span>
+<span class="sd">                new[0] = 1</span>
+<span class="sd">                # create the folder in rspace named by egroupware_project</span>
+<span class="sd">                folder_json = json.loads(</span>
+<span class="sd">                    create_rspace_folder(egroupware_project_name))</span>
+<span class="sd">            # create the notebook in rspace named by fs_storage_folder name</span>
+<span class="sd">            document_json = search_documents(fs_storage_folder)</span>
+<span class="sd">            if document_json == 1:</span>
+<span class="sd">                new[1] = 1</span>
+<span class="sd">                # create a document in rspace named by egroupware_project</span>
+<span class="sd">                document_json = json.loads(create_rspace_document(</span>
+<span class="sd">                    fs_storage_folder, html_table, folder_json[&#39;id&#39;], row[&#39;egroupware_df-egroupware_df_tags&#39;]))</span>
+<span class="sd">            if new[0]:</span>
+<span class="sd">                print(f&quot;I created a new folder: {egroupware_project_name}&quot;)</span>
+<span class="sd">            if new[1]:</span>
+<span class="sd">                print(f&quot;I created a new document: {fs_storage_folder}&quot;)</span>
+<span class="sd">            print(&quot;############################################&quot;)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<span class="c1"># TODO: create tumbnails for the images and readout metadata</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    import os</span>
+<span class="sd">    from pathlib import Path</span>
+<span class="sd">    import nibabel as nib</span>
+<span class="sd">    import numpy as np</span>
+
+<span class="sd">    def filelist(startpath):</span>
+<span class="sd">        files = []</span>
+<span class="sd">        for path in Path(startpath).rglob(&#39;*&#39;):</span>
+<span class="sd">            if path.is_file():</span>
+<span class="sd">                files.append(str(path))</span>
+<span class="sd">        return files</span>
+
+<span class="sd">    fs_storage_df = get_dataframe(&quot;fs_storage&quot;)</span>
+<span class="sd">    for index, row in fs_storage_df.iterrows():</span>
+<span class="sd">        fs_storage_folder = row[&#39;project&#39;]</span>
+<span class="sd">        full_path = f&quot;/home/omero-import/{fs_storage_folder}&quot;</span>
+<span class="sd">        #print(full_path)</span>
+<span class="sd">        if os.path.isdir(full_path):</span>
+<span class="sd">            files = filelist(full_path)</span>
+<span class="sd">            for i, f in enumerate(files):</span>
+<span class="sd">                if f.split(&quot;.&quot;)[-1] == &quot;gz&quot; and f.split(&quot;.&quot;)[-2] == &quot;nii&quot;:</span>
+<span class="sd">                    print(f)</span>
+
+<span class="sd">                    # Load the NIfTI image</span>
+<span class="sd">                    img = nib.load(f)</span>
+
+<span class="sd">                    # Get the image data as a numpy array</span>
+<span class="sd">                    data = img.get_fdata()</span>
+
+<span class="sd">                    # Calculate the maximum intensity projection along the z-axis</span>
+<span class="sd">                    mip = np.max(data, axis=2)</span>
+
+<span class="sd">                    # If you want to save the MIP as a new NIfTI image</span>
+<span class="sd">                    new_img = nib.Nifti1Image(mip, affine=img.affine)</span>
+<span class="sd">                    nib.save(new_img, &quot;/&quot;.join(f.split(&quot;/&quot;)[:-1] + [&#39;mip_image.nii&#39;]))</span>
+<span class="sd">                    break</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, saibotMagd.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

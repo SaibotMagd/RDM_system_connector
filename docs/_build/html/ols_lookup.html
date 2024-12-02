@@ -1,0 +1,205 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ols_lookup module &mdash; RDM_system_connector documentation 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=2709fde1"></script>
+      <script src="_static/doctools.js?v=9a2dae69"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="src package" href="src.html" />
+    <link rel="prev" title="main module" href="main.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            RDM_system_connector documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">RDM_system_connector</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="all_to_db.html">all_to_db module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="db_to_all_synced.html">db_to_all_synced module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="folder_extract_mt.html">folder_extract_mt module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="folder_extract_parallel.html">folder_extract_parallel module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="main.html">main module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">ols_lookup module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#ols_lookup.calculate_overlap"><code class="docutils literal notranslate"><span class="pre">calculate_overlap()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ols_lookup.fetch_searchStr_info"><code class="docutils literal notranslate"><span class="pre">fetch_searchStr_info()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ols_lookup.find_best_match"><code class="docutils literal notranslate"><span class="pre">find_best_match()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ols_lookup.generate_substrings"><code class="docutils literal notranslate"><span class="pre">generate_substrings()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ols_lookup.get_matching_entries"><code class="docutils literal notranslate"><span class="pre">get_matching_entries()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ols_lookup.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ols_lookup.read_json_file"><code class="docutils literal notranslate"><span class="pre">read_json_file()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="src.html">src package</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">RDM_system_connector documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">RDM_system_connector</a></li>
+      <li class="breadcrumb-item active">ols_lookup module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/ols_lookup.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-ols_lookup">
+<span id="ols-lookup-module"></span><h1>ols_lookup module<a class="headerlink" href="#module-ols_lookup" title="Link to this heading"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="ols_lookup.calculate_overlap">
+<span class="sig-prename descclassname"><span class="pre">ols_lookup.</span></span><span class="sig-name descname"><span class="pre">calculate_overlap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">str1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">str2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ols_lookup.html#calculate_overlap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ols_lookup.calculate_overlap" title="Link to this definition"></a></dt>
+<dd><p>Calculate the overlap between two strings.</p>
+<p>Parameters:
+str1 (str): The first string.
+str2 (str): The second string.</p>
+<p>Returns:
+float: The overlap between the two strings.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ols_lookup.fetch_searchStr_info">
+<span class="sig-prename descclassname"><span class="pre">ols_lookup.</span></span><span class="sig-name descname"><span class="pre">fetch_searchStr_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">searchStr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'class,individual'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ontology_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ols_lookup.html#fetch_searchStr_info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ols_lookup.fetch_searchStr_info" title="Link to this definition"></a></dt>
+<dd><p>Fetch searchStr information from the EBI OLS4 API.</p>
+<p>Parameters:
+searchStr (str): The search string.
+type (str): The type of search. Default is ‘class,individual’.
+ontology_name (str): The name of the ontology. Default is None.</p>
+<p>Returns:
+dict: The JSON response from the API.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ols_lookup.find_best_match">
+<span class="sig-prename descclassname"><span class="pre">ols_lookup.</span></span><span class="sig-name descname"><span class="pre">find_best_match</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">part</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ols_lookup.html#find_best_match"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ols_lookup.find_best_match" title="Link to this definition"></a></dt>
+<dd><p>Find the best match for a given part in a list of labels.</p>
+<p>Parameters:
+part (str): The part to match.
+labels (list): A list of labels.</p>
+<p>Returns:
+str: The best match.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ols_lookup.generate_substrings">
+<span class="sig-prename descclassname"><span class="pre">ols_lookup.</span></span><span class="sig-name descname"><span class="pre">generate_substrings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_string</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ols_lookup.html#generate_substrings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ols_lookup.generate_substrings" title="Link to this definition"></a></dt>
+<dd><p>Generate all possible substrings from a given string.</p>
+<p>Parameters:
+input_string (str): The input string.</p>
+<p>Returns:
+list: A list of substrings.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ols_lookup.get_matching_entries">
+<span class="sig-prename descclassname"><span class="pre">ols_lookup.</span></span><span class="sig-name descname"><span class="pre">get_matching_entries</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">searchStr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ontology_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ols_lookup.html#get_matching_entries"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ols_lookup.get_matching_entries" title="Link to this definition"></a></dt>
+<dd><p>Get matching entries for a given searchStr.</p>
+<p>Parameters:
+searchStr (str): The search string.
+type (str): The type of search. Default is None.
+ontology_name (str): The name of the ontology. Default is None.</p>
+<p>Returns:
+tuple: A tuple containing a list of labels and a list of entries.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ols_lookup.main">
+<span class="sig-prename descclassname"><span class="pre">ols_lookup.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_string</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_format</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ontology_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ols_lookup.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ols_lookup.main" title="Link to this definition"></a></dt>
+<dd><p>Main function to handle the input and output.</p>
+<p>Parameters:
+input_string (str): The input string.
+output_format (str): The output format.
+type (str): The type of search. Default is None.
+ontology_name (str): The name of the ontology. Default is None.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ols_lookup.read_json_file">
+<span class="sig-prename descclassname"><span class="pre">ols_lookup.</span></span><span class="sig-name descname"><span class="pre">read_json_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ols_lookup.html#read_json_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ols_lookup.read_json_file" title="Link to this definition"></a></dt>
+<dd><p>Read a JSON file and return the data.</p>
+<p>Parameters:
+file_path (str): The path to the JSON file.</p>
+<p>Returns:
+dict: The data from the JSON file.</p>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="main.html" class="btn btn-neutral float-left" title="main module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="src.html" class="btn btn-neutral float-right" title="src package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, saibotMagd.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

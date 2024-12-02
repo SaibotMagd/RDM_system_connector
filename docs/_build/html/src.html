@@ -1,0 +1,1227 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>src package &mdash; RDM_system_connector documentation 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=2709fde1"></script>
+      <script src="_static/doctools.js?v=9a2dae69"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="ols_lookup module" href="ols_lookup.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            RDM_system_connector documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">RDM_system_connector</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="all_to_db.html">all_to_db module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="db_to_all_synced.html">db_to_all_synced module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="folder_extract_mt.html">folder_extract_mt module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="folder_extract_parallel.html">folder_extract_parallel module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="main.html">main module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ols_lookup.html">ols_lookup module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">src package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-src.io_functions">src.io_functions module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_functions.add_attachment_to_project"><code class="docutils literal notranslate"><span class="pre">add_attachment_to_project()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_functions.auto_insert_fs_storage_to_database"><code class="docutils literal notranslate"><span class="pre">auto_insert_fs_storage_to_database()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_functions.auto_insert_omero_to_database"><code class="docutils literal notranslate"><span class="pre">auto_insert_omero_to_database()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_functions.calculate_binary_overlap"><code class="docutils literal notranslate"><span class="pre">calculate_binary_overlap()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_functions.calculate_percentage"><code class="docutils literal notranslate"><span class="pre">calculate_percentage()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_functions.check_db_table"><code class="docutils literal notranslate"><span class="pre">check_db_table()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_functions.check_for_omero_entries"><code class="docutils literal notranslate"><span class="pre">check_for_omero_entries()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_functions.check_if_entry_exists"><code class="docutils literal notranslate"><span class="pre">check_if_entry_exists()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_functions.convert_abbreviation"><code class="docutils literal notranslate"><span class="pre">convert_abbreviation()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_functions.convert_abbreviations"><code class="docutils literal notranslate"><span class="pre">convert_abbreviations()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_functions.convert_omero_timestamp"><code class="docutils literal notranslate"><span class="pre">convert_omero_timestamp()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_functions.convert_rspace_timestamp"><code class="docutils literal notranslate"><span class="pre">convert_rspace_timestamp()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_functions.copy_author_from_projectcolumn"><code class="docutils literal notranslate"><span class="pre">copy_author_from_projectcolumn()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_functions.create_bulk_import_file"><code class="docutils literal notranslate"><span class="pre">create_bulk_import_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_functions.create_link"><code class="docutils literal notranslate"><span class="pre">create_link()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_functions.create_object"><code class="docutils literal notranslate"><span class="pre">create_object()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_functions.create_rspace_document"><code class="docutils literal notranslate"><span class="pre">create_rspace_document()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_functions.create_rspace_document_header"><code class="docutils literal notranslate"><span class="pre">create_rspace_document_header()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_functions.create_rspace_files_table"><code class="docutils literal notranslate"><span class="pre">create_rspace_files_table()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_functions.create_rspace_folder"><code class="docutils literal notranslate"><span class="pre">create_rspace_folder()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_functions.create_system_overlap"><code class="docutils literal notranslate"><span class="pre">create_system_overlap()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_functions.create_tag"><code class="docutils literal notranslate"><span class="pre">create_tag()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_functions.delete_duplicate_links"><code class="docutils literal notranslate"><span class="pre">delete_duplicate_links()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_functions.delete_duplicate_objects"><code class="docutils literal notranslate"><span class="pre">delete_duplicate_objects()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_functions.delete_duplicate_tags"><code class="docutils literal notranslate"><span class="pre">delete_duplicate_tags()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_functions.delete_duplicates_bulk_import"><code class="docutils literal notranslate"><span class="pre">delete_duplicates_bulk_import()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_functions.generate_html_table"><code class="docutils literal notranslate"><span class="pre">generate_html_table()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_functions.get_abbreviation_dict"><code class="docutils literal notranslate"><span class="pre">get_abbreviation_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_functions.get_cleaned_tag_string"><code class="docutils literal notranslate"><span class="pre">get_cleaned_tag_string()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_functions.get_col_overlap_df"><code class="docutils literal notranslate"><span class="pre">get_col_overlap_df()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_functions.get_create_table_sql"><code class="docutils literal notranslate"><span class="pre">get_create_table_sql()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_functions.get_current_username"><code class="docutils literal notranslate"><span class="pre">get_current_username()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_functions.get_dataframe"><code class="docutils literal notranslate"><span class="pre">get_dataframe()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_functions.get_dataset_fs_storage_name"><code class="docutils literal notranslate"><span class="pre">get_dataset_fs_storage_name()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_functions.get_description_dict"><code class="docutils literal notranslate"><span class="pre">get_description_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_functions.get_df_if_exist"><code class="docutils literal notranslate"><span class="pre">get_df_if_exist()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_functions.get_df_name"><code class="docutils literal notranslate"><span class="pre">get_df_name()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_functions.get_egroupware_data"><code class="docutils literal notranslate"><span class="pre">get_egroupware_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_functions.get_file_list"><code class="docutils literal notranslate"><span class="pre">get_file_list()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_functions.get_file_stats"><code class="docutils literal notranslate"><span class="pre">get_file_stats()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_functions.get_filelist_from_database"><code class="docutils literal notranslate"><span class="pre">get_filelist_from_database()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_functions.get_int_from_date"><code class="docutils literal notranslate"><span class="pre">get_int_from_date()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_functions.get_int_timestamp_from_iso"><code class="docutils literal notranslate"><span class="pre">get_int_timestamp_from_iso()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_functions.get_iso_timestamp_from_int"><code class="docutils literal notranslate"><span class="pre">get_iso_timestamp_from_int()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_functions.get_link_object_from_id"><code class="docutils literal notranslate"><span class="pre">get_link_object_from_id()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_functions.get_netstore_data"><code class="docutils literal notranslate"><span class="pre">get_netstore_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_functions.get_netstore_filelist"><code class="docutils literal notranslate"><span class="pre">get_netstore_filelist()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_functions.get_object_by_id"><code class="docutils literal notranslate"><span class="pre">get_object_by_id()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_functions.get_object_by_name"><code class="docutils literal notranslate"><span class="pre">get_object_by_name()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_functions.get_object_id_from_netstore_name"><code class="docutils literal notranslate"><span class="pre">get_object_id_from_netstore_name()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_functions.get_object_id_from_specific_id"><code class="docutils literal notranslate"><span class="pre">get_object_id_from_specific_id()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_functions.get_placeholder_files_for_rspace"><code class="docutils literal notranslate"><span class="pre">get_placeholder_files_for_rspace()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_functions.get_possible_tags_list"><code class="docutils literal notranslate"><span class="pre">get_possible_tags_list()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_functions.get_project_timestamps_from_fs_storage"><code class="docutils literal notranslate"><span class="pre">get_project_timestamps_from_fs_storage()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_functions.get_project_user_tuple"><code class="docutils literal notranslate"><span class="pre">get_project_user_tuple()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_functions.get_remaining_path"><code class="docutils literal notranslate"><span class="pre">get_remaining_path()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_functions.get_rspace_workspace_folders"><code class="docutils literal notranslate"><span class="pre">get_rspace_workspace_folders()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_functions.get_sample_data_from_barcode"><code class="docutils literal notranslate"><span class="pre">get_sample_data_from_barcode()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_functions.get_secret_api_parameters"><code class="docutils literal notranslate"><span class="pre">get_secret_api_parameters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_functions.get_stopwords"><code class="docutils literal notranslate"><span class="pre">get_stopwords()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_functions.get_tag_description"><code class="docutils literal notranslate"><span class="pre">get_tag_description()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_functions.get_tags_from_id"><code class="docutils literal notranslate"><span class="pre">get_tags_from_id()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_functions.get_tags_tuple"><code class="docutils literal notranslate"><span class="pre">get_tags_tuple()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_functions.insert_dict_to_database"><code class="docutils literal notranslate"><span class="pre">insert_dict_to_database()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_functions.insert_egroupware"><code class="docutils literal notranslate"><span class="pre">insert_egroupware()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_functions.is_string_in_list"><code class="docutils literal notranslate"><span class="pre">is_string_in_list()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_functions.load_json_file"><code class="docutils literal notranslate"><span class="pre">load_json_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_functions.omero_inplace_bulk_import"><code class="docutils literal notranslate"><span class="pre">omero_inplace_bulk_import()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_functions.omero_inplace_import"><code class="docutils literal notranslate"><span class="pre">omero_inplace_import()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_functions.process_rspace_documents"><code class="docutils literal notranslate"><span class="pre">process_rspace_documents()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_functions.process_rspace_folder"><code class="docutils literal notranslate"><span class="pre">process_rspace_folder()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_functions.process_tags"><code class="docutils literal notranslate"><span class="pre">process_tags()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_functions.remove_stopwords"><code class="docutils literal notranslate"><span class="pre">remove_stopwords()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_functions.save_df"><code class="docutils literal notranslate"><span class="pre">save_df()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_functions.search_documents"><code class="docutils literal notranslate"><span class="pre">search_documents()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_functions.search_folder"><code class="docutils literal notranslate"><span class="pre">search_folder()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-src.io_metadata">src.io_metadata module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_metadata.extract_metadata"><code class="docutils literal notranslate"><span class="pre">extract_metadata()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_metadata.get_bf_metadata"><code class="docutils literal notranslate"><span class="pre">get_bf_metadata()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_metadata.get_init"><code class="docutils literal notranslate"><span class="pre">get_init()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_metadata.get_inputlist"><code class="docutils literal notranslate"><span class="pre">get_inputlist()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_metadata.is_tar_archive"><code class="docutils literal notranslate"><span class="pre">is_tar_archive()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_metadata.process_tar_gz"><code class="docutils literal notranslate"><span class="pre">process_tar_gz()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_metadata.save_metadata"><code class="docutils literal notranslate"><span class="pre">save_metadata()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_metadata.save_to_xml"><code class="docutils literal notranslate"><span class="pre">save_to_xml()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.io_metadata.search_string_in_file"><code class="docutils literal notranslate"><span class="pre">search_string_in_file()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-src.llm_response">src.llm_response module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#src.llm_response.get_base_prompt"><code class="docutils literal notranslate"><span class="pre">get_base_prompt()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.llm_response.get_mistral_response"><code class="docutils literal notranslate"><span class="pre">get_mistral_response()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-src">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">RDM_system_connector documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">RDM_system_connector</a></li>
+      <li class="breadcrumb-item active">src package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/src.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="src-package">
+<h1>src package<a class="headerlink" href="#src-package" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-src.io_functions">
+<span id="src-io-functions-module"></span><h2>src.io_functions module<a class="headerlink" href="#module-src.io_functions" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_functions.add_attachment_to_project">
+<span class="sig-prename descclassname"><span class="pre">src.io_functions.</span></span><span class="sig-name descname"><span class="pre">add_attachment_to_project</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">host</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">project_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/src/io_functions.html#add_attachment_to_project"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_functions.add_attachment_to_project" title="Link to this definition"></a></dt>
+<dd><p>This function adds an attachment to a project on an OMERO server.
+It takes the username, password, host, port, project ID, and file path as input.</p>
+<p>Parameters:
+username (str): The username.
+password (str): The password.
+host (str): The host address.
+port (int): The port number.
+project_id (int): The project ID.
+file_path (str): The file path.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_functions.auto_insert_fs_storage_to_database">
+<span class="sig-prename descclassname"><span class="pre">src.io_functions.</span></span><span class="sig-name descname"><span class="pre">auto_insert_fs_storage_to_database</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/io_functions.html#auto_insert_fs_storage_to_database"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_functions.auto_insert_fs_storage_to_database" title="Link to this definition"></a></dt>
+<dd><p>This function automatically inserts file storage data into the database.
+It retrieves project list and file dictionary from a netstore, then iterates over each project.
+For each project, it inserts object data into the database and retrieves the object id.
+Then, it iterates over each file in the project, retrieves file stats, and inserts them into the fs_storage table.
+It also extracts tags from the file path, cleans and converts them, and inserts them into the tag table.
+Finally, it removes duplicate objects and tags from the database.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_functions.auto_insert_omero_to_database">
+<span class="sig-prename descclassname"><span class="pre">src.io_functions.</span></span><span class="sig-name descname"><span class="pre">auto_insert_omero_to_database</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/io_functions.html#auto_insert_omero_to_database"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_functions.auto_insert_omero_to_database" title="Link to this definition"></a></dt>
+<dd><p>This function automatically inserts OMERO data into the database.
+It establishes a connection to the OMERO server, retrieves all projects, and iterates over each project.
+For each project, it extracts project data, inserts it into the database, and iterates over each tag in the project,
+extracting and processing tag data and inserting it into the database.
+It then iterates over each dataset in the project, extracts dataset data, inserts it into the database,
+and iterates over each tag in the dataset, extracting and processing tag data and inserting it into the database.
+It then iterates over each image in the dataset, extracts image data, inserts it into the database,
+and iterates over each tag in the image, extracting and processing tag data and inserting it into the database.
+Finally, it removes duplicate objects and tags from the database.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_functions.calculate_binary_overlap">
+<span class="sig-prename descclassname"><span class="pre">src.io_functions.</span></span><span class="sig-name descname"><span class="pre">calculate_binary_overlap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">col1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">col2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsilon</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/io_functions.html#calculate_binary_overlap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_functions.calculate_binary_overlap" title="Link to this definition"></a></dt>
+<dd><p>This function calculates the binary overlap between two columns of two DataFrames based on a given epsilon value.
+It takes two DataFrames, two column names, and an epsilon value as input and returns a DataFrame containing the binary overlap results.</p>
+<p>Parameters:
+df1 (pd.DataFrame): The first DataFrame.
+col1 (str): The name of the column in the first DataFrame.
+df2 (pd.DataFrame): The second DataFrame.
+col2 (str): The name of the column in the second DataFrame.
+epsilon (float): The maximum time difference allowed for a match.</p>
+<p>Returns:
+pd.DataFrame: A DataFrame containing the binary overlap results.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_functions.calculate_percentage">
+<span class="sig-prename descclassname"><span class="pre">src.io_functions.</span></span><span class="sig-name descname"><span class="pre">calculate_percentage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">str1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">str2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/src/io_functions.html#calculate_percentage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_functions.calculate_percentage" title="Link to this definition"></a></dt>
+<dd><p>This function calculates the percentage of common characters between two strings.
+It takes two strings as input and returns the percentage of common characters.</p>
+<p>Parameters:
+str1 (str): The first string.
+str2 (str): The second string.</p>
+<p>Returns:
+float: The percentage of common characters.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_functions.check_db_table">
+<span class="sig-prename descclassname"><span class="pre">src.io_functions.</span></span><span class="sig-name descname"><span class="pre">check_db_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">table_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/src/io_functions.html#check_db_table"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_functions.check_db_table" title="Link to this definition"></a></dt>
+<dd><p>This function checks if a table exists in a SQLite database.
+If the table does not exist, it creates the table using the SQL code from the get_create_table_sql() function.</p>
+<p>Parameters:
+db_name (str): The name of the SQLite database.
+table_name (str): The name of the table to check.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_functions.check_for_omero_entries">
+<span class="sig-prename descclassname"><span class="pre">src.io_functions.</span></span><span class="sig-name descname"><span class="pre">check_for_omero_entries</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">omero_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">object_type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/io_functions.html#check_for_omero_entries"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_functions.check_for_omero_entries" title="Link to this definition"></a></dt>
+<dd><p>This function checks for existing entries in the OMERO source of a SQLite database based on the specified OMERO name and object type.
+It takes a database name, an OMERO name, and an object type as input and returns a DataFrame containing the retrieved data.</p>
+<p>Parameters:
+db_name (str): The name of the SQLite database.
+omero_name (str): The OMERO name to check for.
+object_type (str): The object type to check for.</p>
+<p>Returns:
+pd.DataFrame: A DataFrame containing the retrieved data.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_functions.check_if_entry_exists">
+<span class="sig-prename descclassname"><span class="pre">src.io_functions.</span></span><span class="sig-name descname"><span class="pre">check_if_entry_exists</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">table_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">object_document</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/src/io_functions.html#check_if_entry_exists"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_functions.check_if_entry_exists" title="Link to this definition"></a></dt>
+<dd><p>This function checks if a specific entry exists in a SQLite database table.
+It takes the database name, table name, and a dictionary containing the specific ID as input.
+The function returns 1 if the entry exists and 0 otherwise.</p>
+<p>Parameters:
+db_name (str): The name of the SQLite database.
+table_name (str): The name of the table to check.
+object_document (Dict[str, any]): A dictionary containing the specific ID.</p>
+<p>Returns:
+int: 1 if the entry exists, 0 otherwise.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_functions.convert_abbreviation">
+<span class="sig-prename descclassname"><span class="pre">src.io_functions.</span></span><span class="sig-name descname"><span class="pre">convert_abbreviation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">og_string</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/src/io_functions.html#convert_abbreviation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_functions.convert_abbreviation" title="Link to this definition"></a></dt>
+<dd><p>This function converts a string of abbreviations into a string of full forms using a dictionary of abbreviations.
+It takes a string as input and returns the updated string.</p>
+<p>Parameters:
+og_string (str): The input string containing the abbreviations.</p>
+<p>Returns:
+str: The updated string containing the full forms.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_functions.convert_abbreviations">
+<span class="sig-prename descclassname"><span class="pre">src.io_functions.</span></span><span class="sig-name descname"><span class="pre">convert_abbreviations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colname</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'tags'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="_modules/src/io_functions.html#convert_abbreviations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_functions.convert_abbreviations" title="Link to this definition"></a></dt>
+<dd><p>This function replaces abbreviations in a DataFrame column with their full forms using a dictionary of abbreviations.
+It takes a DataFrame and a column name as input and returns the updated DataFrame.</p>
+<p>Parameters:
+df (pd.DataFrame): The input DataFrame.
+colname (str): The name of the column containing the tags. Default is “tags”.</p>
+<p>Returns:
+pd.DataFrame: The updated DataFrame.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_functions.convert_omero_timestamp">
+<span class="sig-prename descclassname"><span class="pre">src.io_functions.</span></span><span class="sig-name descname"><span class="pre">convert_omero_timestamp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestamp</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/io_functions.html#convert_omero_timestamp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_functions.convert_omero_timestamp" title="Link to this definition"></a></dt>
+<dd><p>This function converts a timestamp from OMERO format to a standard format.</p>
+<p>Parameters:
+timestamp (str): The timestamp in OMERO format.</p>
+<p>Returns:
+str: The timestamp in standard format.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_functions.convert_rspace_timestamp">
+<span class="sig-prename descclassname"><span class="pre">src.io_functions.</span></span><span class="sig-name descname"><span class="pre">convert_rspace_timestamp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestamp</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/io_functions.html#convert_rspace_timestamp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_functions.convert_rspace_timestamp" title="Link to this definition"></a></dt>
+<dd><p>This function converts a timestamp from RSpace format to a standard format.</p>
+<p>Parameters:
+timestamp (str): The timestamp in RSpace format.</p>
+<p>Returns:
+str: The timestamp in standard format.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_functions.copy_author_from_projectcolumn">
+<span class="sig-prename descclassname"><span class="pre">src.io_functions.</span></span><span class="sig-name descname"><span class="pre">copy_author_from_projectcolumn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="_modules/src/io_functions.html#copy_author_from_projectcolumn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_functions.copy_author_from_projectcolumn" title="Link to this definition"></a></dt>
+<dd><p>This function takes a DataFrame as input and copies the author information from the project column to the author column.
+The author information is expected to be present in the project column in the format “Project Name (Author Name)”.
+The function extracts the author name from the project column and appends it to the author column.
+If the author column already contains some information, the new author name is appended to it.
+The function also removes any duplicates from the author column and returns the updated DataFrame.</p>
+<p>Parameters:
+df (pd.DataFrame): The input DataFrame.</p>
+<p>Returns:
+pd.DataFrame: The updated DataFrame.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_functions.create_bulk_import_file">
+<span class="sig-prename descclassname"><span class="pre">src.io_functions.</span></span><span class="sig-name descname"><span class="pre">create_bulk_import_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">docker_vol_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./data/image_import_files.csv'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/io_functions.html#create_bulk_import_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_functions.create_bulk_import_file" title="Link to this definition"></a></dt>
+<dd><p>This function creates a bulk import file for OMERO.</p>
+<p>Parameters:
+id (str): The ID of the dataset.
+path (str): The path to the image file.
+docker_vol_path (str): The path to the Docker volume.
+filename (str): The name of the bulk import file. Default is ‘./data/image_import_files.csv’.</p>
+<p>Returns:
+int: 0 if the operation is successful.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_functions.create_link">
+<span class="sig-prename descclassname"><span class="pre">src.io_functions.</span></span><span class="sig-name descname"><span class="pre">create_link</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">high_object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">low_object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tag'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/io_functions.html#create_link"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_functions.create_link" title="Link to this definition"></a></dt>
+<dd><p>This function creates a link between two objects in OMERO.</p>
+<p>Parameters:
+high_object (object): The parent object.
+low_object (object): The child object.
+type (str): The type of the link. Default is ‘tag’.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_functions.create_object">
+<span class="sig-prename descclassname"><span class="pre">src.io_functions.</span></span><span class="sig-name descname"><span class="pre">create_object</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">object</span></span></span><a class="reference internal" href="_modules/src/io_functions.html#create_object"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_functions.create_object" title="Link to this definition"></a></dt>
+<dd><p>This function creates a new project or dataset in OMERO.</p>
+<p>Parameters:
+project_name (str): The name of the project or dataset.
+type (str): The type of the object. It can be ‘Project’ or ‘Dataset’.</p>
+<p>Returns:
+object: The newly created project or dataset object.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_functions.create_rspace_document">
+<span class="sig-prename descclassname"><span class="pre">src.io_functions.</span></span><span class="sig-name descname"><span class="pre">create_rspace_document</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">content</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent_folder_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tags</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">apikey</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'e7HV1YLT8BvhM2dSoVvzIyVK0svNexJq'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/io_functions.html#create_rspace_document"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_functions.create_rspace_document" title="Link to this definition"></a></dt>
+<dd><p>This function creates a new document in RSpace.</p>
+<p>Parameters:
+doc_name (str): The name of the document.
+content (str): The content of the document.
+parent_folder_id (int): The ID of the parent folder.
+tags (str): The tags for the document. Default is an empty string.
+apikey (str): The API key. Default is ‘e7HV1YLT8BvhM2dSoVvzIyVK0svNexJq’.</p>
+<p>Returns:
+str: The output of the command.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_functions.create_rspace_document_header">
+<span class="sig-prename descclassname"><span class="pre">src.io_functions.</span></span><span class="sig-name descname"><span class="pre">create_rspace_document_header</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">egroupware_project_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fs_storage_project_folder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overlap_ratio</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/io_functions.html#create_rspace_document_header"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_functions.create_rspace_document_header" title="Link to this definition"></a></dt>
+<dd><p>This function creates a header for an RSpace document.</p>
+<p>Parameters:
+egroupware_project_name (str): The name of the egroupware project.
+fs_storage_project_folder (str): The name of the fs_storage project folder.
+overlap_ratio (float): The overlap ratio.</p>
+<p>Returns:
+str: The header.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_functions.create_rspace_files_table">
+<span class="sig-prename descclassname"><span class="pre">src.io_functions.</span></span><span class="sig-name descname"><span class="pre">create_rspace_files_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">header</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tar_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sync_database.db'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/io_functions.html#create_rspace_files_table"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_functions.create_rspace_files_table" title="Link to this definition"></a></dt>
+<dd><p>This function creates a table of files for RSpace.</p>
+<p>Parameters:
+header (str): The header of the table.
+tar_id (int): The ID of the tar file.
+db_name (str): The name of the database. Default is ‘sync_database.db’.</p>
+<p>Returns:
+list: A list of files.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_functions.create_rspace_folder">
+<span class="sig-prename descclassname"><span class="pre">src.io_functions.</span></span><span class="sig-name descname"><span class="pre">create_rspace_folder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">apikey</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'e7HV1YLT8BvhM2dSoVvzIyVK0svNexJq'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/io_functions.html#create_rspace_folder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_functions.create_rspace_folder" title="Link to this definition"></a></dt>
+<dd><p>This function creates a new folder in RSpace.</p>
+<p>Parameters:
+folder_name (str): The name of the folder.
+apikey (str): The API key. Default is ‘e7HV1YLT8BvhM2dSoVvzIyVK0svNexJq’.</p>
+<p>Returns:
+str: The output of the command.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_functions.create_system_overlap">
+<span class="sig-prename descclassname"><span class="pre">src.io_functions.</span></span><span class="sig-name descname"><span class="pre">create_system_overlap</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="_modules/src/io_functions.html#create_system_overlap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_functions.create_system_overlap" title="Link to this definition"></a></dt>
+<dd><p>This function creates a DataFrame containing the overlap between egroupware and netstore DataFrames based on project, author, and tags columns.
+It returns the DataFrame containing the overlap.</p>
+<p>Returns:
+pd.DataFrame: A DataFrame containing the overlap between egroupware and netstore DataFrames.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_functions.create_tag">
+<span class="sig-prename descclassname"><span class="pre">src.io_functions.</span></span><span class="sig-name descname"><span class="pre">create_tag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag_description</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">object</span></span></span><a class="reference internal" href="_modules/src/io_functions.html#create_tag"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_functions.create_tag" title="Link to this definition"></a></dt>
+<dd><p>This function creates a new tag in OMERO.</p>
+<p>Parameters:
+tag_name (str): The name of the tag.
+tag_description (str): The description of the tag.</p>
+<p>Returns:
+object: The newly created tag object.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_functions.delete_duplicate_links">
+<span class="sig-prename descclassname"><span class="pre">src.io_functions.</span></span><span class="sig-name descname"><span class="pre">delete_duplicate_links</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./data/sync_database.db'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/io_functions.html#delete_duplicate_links"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_functions.delete_duplicate_links" title="Link to this definition"></a></dt>
+<dd><p>This function deletes duplicate links from a SQLite database table.
+It takes the database name as input.</p>
+<p>Parameters:
+db_name (str): The name of the SQLite database. Default is ‘./data/sync_database.db’.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_functions.delete_duplicate_objects">
+<span class="sig-prename descclassname"><span class="pre">src.io_functions.</span></span><span class="sig-name descname"><span class="pre">delete_duplicate_objects</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'./data/sync_database.db'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/src/io_functions.html#delete_duplicate_objects"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_functions.delete_duplicate_objects" title="Link to this definition"></a></dt>
+<dd><p>This function deletes duplicate objects from a SQLite database table.
+It takes the database name as input and returns 0 if the operation is successful.</p>
+<p>Parameters:
+db_name (str): The name of the SQLite database. Default is ‘./data/sync_database.db’.</p>
+<p>Returns:
+int: 0 if the operation is successful.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_functions.delete_duplicate_tags">
+<span class="sig-prename descclassname"><span class="pre">src.io_functions.</span></span><span class="sig-name descname"><span class="pre">delete_duplicate_tags</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'./data/sync_database.db'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/src/io_functions.html#delete_duplicate_tags"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_functions.delete_duplicate_tags" title="Link to this definition"></a></dt>
+<dd><p>This function deletes duplicate tags from a SQLite database table.
+It takes the database name as input and returns 0 if the operation is successful.</p>
+<p>Parameters:
+db_name (str): The name of the SQLite database. Default is ‘./data/sync_database.db’.</p>
+<p>Returns:
+int: 0 if the operation is successful.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_functions.delete_duplicates_bulk_import">
+<span class="sig-prename descclassname"><span class="pre">src.io_functions.</span></span><span class="sig-name descname"><span class="pre">delete_duplicates_bulk_import</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bulk_file_src_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/io_functions.html#delete_duplicates_bulk_import"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_functions.delete_duplicates_bulk_import" title="Link to this definition"></a></dt>
+<dd><p>This function removes duplicate rows from a CSV file containing a list of files/folders to be imported into OMERO.
+It takes the source file path as input.</p>
+<p>Parameters:
+bulk_file_src_path (str): The source file path.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_functions.generate_html_table">
+<span class="sig-prename descclassname"><span class="pre">src.io_functions.</span></span><span class="sig-name descname"><span class="pre">generate_html_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">files</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[{'access':</span> <span class="pre">'manuel',</span> <span class="pre">'metadata':</span> <span class="pre">'empty',</span> <span class="pre">'name':</span> <span class="pre">'file1.xls',</span> <span class="pre">'path':</span> <span class="pre">'/workspace/editor/structuredDocument/file1.xls',</span> <span class="pre">'type':</span> <span class="pre">'sheet'},</span> <span class="pre">{'access':</span> <span class="pre">'manuel',</span> <span class="pre">'metadata':</span> <span class="pre">'empty',</span> <span class="pre">'name':</span> <span class="pre">'file2.pdf',</span> <span class="pre">'path':</span> <span class="pre">'/workspace/editor/structuredDocument/file2.pdf',</span> <span class="pre">'type':</span> <span class="pre">'pdf'},</span> <span class="pre">{'access':</span> <span class="pre">'omero',</span> <span class="pre">'metadata':</span> <span class="pre">'empty',</span> <span class="pre">'name':</span> <span class="pre">'file3.tif',</span> <span class="pre">'path':</span> <span class="pre">'/workspace/editor/structuredDocument/file3.tif',</span> <span class="pre">'type':</span> <span class="pre">'image</span> <span class="pre">(tif)'},</span> <span class="pre">{'access':</span> <span class="pre">'manuel',</span> <span class="pre">'metadata':</span> <span class="pre">'empty',</span> <span class="pre">'name':</span> <span class="pre">'file4.tar',</span> <span class="pre">'path':</span> <span class="pre">'/workspace/editor/structuredDocument/file4.tar',</span> <span class="pre">'type':</span> <span class="pre">'archive</span> <span class="pre">(tar)'}]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/io_functions.html#generate_html_table"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_functions.generate_html_table" title="Link to this definition"></a></dt>
+<dd><p>This function generates an HTML table.</p>
+<p>Parameters:
+files (list): A list of files. Default is the output of get_placeholder_files_for_rspace().
+header (str): The header of the table. Default is an empty string.</p>
+<p>Returns:
+str: The HTML table.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_functions.get_abbreviation_dict">
+<span class="sig-prename descclassname"><span class="pre">src.io_functions.</span></span><span class="sig-name descname"><span class="pre">get_abbreviation_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/src/io_functions.html#get_abbreviation_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_functions.get_abbreviation_dict" title="Link to this definition"></a></dt>
+<dd><p>This function loads the abbreviations JSON file and returns the data as a dictionary.</p>
+<p>Returns:
+dict: The abbreviations data as a dictionary.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_functions.get_cleaned_tag_string">
+<span class="sig-prename descclassname"><span class="pre">src.io_functions.</span></span><span class="sig-name descname"><span class="pre">get_cleaned_tag_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_string</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/src/io_functions.html#get_cleaned_tag_string"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_functions.get_cleaned_tag_string" title="Link to this definition"></a></dt>
+<dd><p>This function takes a string as input and cleans it by replacing certain separators with semicolons,
+removing duplicates, and removing stopwords.
+The function returns the cleaned string.</p>
+<p>Parameters:
+input_string (str): The input string.</p>
+<p>Returns:
+str: The cleaned string.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_functions.get_col_overlap_df">
+<span class="sig-prename descclassname"><span class="pre">src.io_functions.</span></span><span class="sig-name descname"><span class="pre">get_col_overlap_df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colname1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colname2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="_modules/src/io_functions.html#get_col_overlap_df"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_functions.get_col_overlap_df" title="Link to this definition"></a></dt>
+<dd><p>This function calculates the percentage of common characters between two columns of two DataFrames.
+It takes two DataFrames and two column names as input and returns a DataFrame containing the combinations of values and their corresponding percentage of common characters.</p>
+<p>Parameters:
+df1 (pd.DataFrame): The first DataFrame.
+df2 (pd.DataFrame): The second DataFrame.
+colname1 (str): The name of the column in the first DataFrame.
+colname2 (str): The name of the column in the second DataFrame.</p>
+<p>Returns:
+pd.DataFrame: A DataFrame containing the combinations of values and their corresponding percentage of common characters.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_functions.get_create_table_sql">
+<span class="sig-prename descclassname"><span class="pre">src.io_functions.</span></span><span class="sig-name descname"><span class="pre">get_create_table_sql</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/src/io_functions.html#get_create_table_sql"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_functions.get_create_table_sql" title="Link to this definition"></a></dt>
+<dd><p>This function loads the database create SQL JSON file and returns the data as a dictionary.</p>
+<p>Returns:
+dict: The database create SQL data as a dictionary.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_functions.get_current_username">
+<span class="sig-prename descclassname"><span class="pre">src.io_functions.</span></span><span class="sig-name descname"><span class="pre">get_current_username</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/io_functions.html#get_current_username"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_functions.get_current_username" title="Link to this definition"></a></dt>
+<dd><p>This function retrieves the current username.</p>
+<p>Returns:
+str: The current username.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_functions.get_dataframe">
+<span class="sig-prename descclassname"><span class="pre">src.io_functions.</span></span><span class="sig-name descname"><span class="pre">get_dataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sync_database.db'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/io_functions.html#get_dataframe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_functions.get_dataframe" title="Link to this definition"></a></dt>
+<dd><p>This function retrieves data from a SQLite database based on the specified data type.
+It takes a data type and a database name as input and returns a DataFrame containing the retrieved data.</p>
+<p>Parameters:
+df_type (str): The type of data to retrieve.
+db_name (str, optional): The name of the SQLite database. Defaults to ‘sync_database.db’.</p>
+<p>Returns:
+pd.DataFrame: A DataFrame containing the retrieved data.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_functions.get_dataset_fs_storage_name">
+<span class="sig-prename descclassname"><span class="pre">src.io_functions.</span></span><span class="sig-name descname"><span class="pre">get_dataset_fs_storage_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/io_functions.html#get_dataset_fs_storage_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_functions.get_dataset_fs_storage_name" title="Link to this definition"></a></dt>
+<dd><p>This function retrieves data from the fs_storage source of a SQLite database based on the specified base path.
+It takes a database name and a base path as input and returns a DataFrame containing the retrieved data.</p>
+<p>Parameters:
+db_name (str): The name of the SQLite database.
+base_path (str): The base path to retrieve data for.</p>
+<p>Returns:
+pd.DataFrame: A DataFrame containing the retrieved data.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_functions.get_description_dict">
+<span class="sig-prename descclassname"><span class="pre">src.io_functions.</span></span><span class="sig-name descname"><span class="pre">get_description_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/src/io_functions.html#get_description_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_functions.get_description_dict" title="Link to this definition"></a></dt>
+<dd><p>This function loads the descriptions JSON file and returns the data as a dictionary.</p>
+<p>Returns:
+dict: The descriptions data as a dictionary.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_functions.get_df_if_exist">
+<span class="sig-prename descclassname"><span class="pre">src.io_functions.</span></span><span class="sig-name descname"><span class="pre">get_df_if_exist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="_modules/src/io_functions.html#get_df_if_exist"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_functions.get_df_if_exist" title="Link to this definition"></a></dt>
+<dd><p>This function takes a file path as input and checks if a file exists at that path.
+If the file exists, it loads the file into a DataFrame and returns the DataFrame.
+If the file does not exist, it returns None.</p>
+<p>Parameters:
+file_path (str): The path to the file.</p>
+<p>Returns:
+pd.DataFrame: The DataFrame if the file exists, None otherwise.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_functions.get_df_name">
+<span class="sig-prename descclassname"><span class="pre">src.io_functions.</span></span><span class="sig-name descname"><span class="pre">get_df_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">var</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/src/io_functions.html#get_df_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_functions.get_df_name" title="Link to this definition"></a></dt>
+<dd><p>This function retrieves the name of a DataFrame variable.
+It takes a DataFrame as input and returns the name of the variable.</p>
+<p>Parameters:
+var (pd.DataFrame): The DataFrame variable.</p>
+<p>Returns:
+str: The name of the DataFrame variable.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_functions.get_egroupware_data">
+<span class="sig-prename descclassname"><span class="pre">src.io_functions.</span></span><span class="sig-name descname"><span class="pre">get_egroupware_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">project_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="_modules/src/io_functions.html#get_egroupware_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_functions.get_egroupware_data" title="Link to this definition"></a></dt>
+<dd><p>This function retrieves egroupware data for a specific project ID from a SQLite database.
+It takes a database name and a project ID as input and returns a DataFrame containing the egroupware data.</p>
+<p>Parameters:
+db_name (str): The name of the SQLite database.
+project_id (int): The project ID.</p>
+<p>Returns:
+pd.DataFrame: A DataFrame containing the egroupware data.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_functions.get_file_list">
+<span class="sig-prename descclassname"><span class="pre">src.io_functions.</span></span><span class="sig-name descname"><span class="pre">get_file_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/io_functions.html#get_file_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_functions.get_file_list" title="Link to this definition"></a></dt>
+<dd><p>Traverse the specified directory and its subdirectories to collect all the file paths.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>folder</strong> – The path of the directory to traverse.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of all the file paths.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_functions.get_file_stats">
+<span class="sig-prename descclassname"><span class="pre">src.io_functions.</span></span><span class="sig-name descname"><span class="pre">get_file_stats</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/io_functions.html#get_file_stats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_functions.get_file_stats" title="Link to this definition"></a></dt>
+<dd><p>This function retrieves file statistics such as name, extension, size, creation and modification timestamps.</p>
+<p>Parameters:
+file_path (str): The path of the file.</p>
+<p>Returns:
+dict: A dictionary containing the file statistics.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_functions.get_filelist_from_database">
+<span class="sig-prename descclassname"><span class="pre">src.io_functions.</span></span><span class="sig-name descname"><span class="pre">get_filelist_from_database</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tar_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sync_database.db'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/io_functions.html#get_filelist_from_database"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_functions.get_filelist_from_database" title="Link to this definition"></a></dt>
+<dd><p>This function retrieves a file list from a SQLite database based on the specified target ID.
+It takes a target ID and a database name as input and returns a DataFrame containing the file list.</p>
+<p>Parameters:
+tar_id (int): The target ID to retrieve the file list for.
+db_name (str, optional): The name of the SQLite database. Defaults to ‘sync_database.db’.</p>
+<p>Returns:
+pd.DataFrame: A DataFrame containing the file list.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_functions.get_int_from_date">
+<span class="sig-prename descclassname"><span class="pre">src.io_functions.</span></span><span class="sig-name descname"><span class="pre">get_int_from_date</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">date_str</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/src/io_functions.html#get_int_from_date"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_functions.get_int_from_date" title="Link to this definition"></a></dt>
+<dd><p>This function converts a date string in the format “YYYY-MM-DD” to an integer representing the number of days since the Unix epoch.</p>
+<p>Parameters:
+date_str (str): The date string in the format “YYYY-MM-DD”.</p>
+<p>Returns:
+int: The number of days since the Unix epoch.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_functions.get_int_timestamp_from_iso">
+<span class="sig-prename descclassname"><span class="pre">src.io_functions.</span></span><span class="sig-name descname"><span class="pre">get_int_timestamp_from_iso</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iso_timestamp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/src/io_functions.html#get_int_timestamp_from_iso"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_functions.get_int_timestamp_from_iso" title="Link to this definition"></a></dt>
+<dd><p>This function takes an ISO timestamp as input and converts it to an integer timestamp.</p>
+<p>Parameters:
+iso_timestamp (str): The ISO timestamp.</p>
+<p>Returns:
+int: The integer timestamp.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_functions.get_iso_timestamp_from_int">
+<span class="sig-prename descclassname"><span class="pre">src.io_functions.</span></span><span class="sig-name descname"><span class="pre">get_iso_timestamp_from_int</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">int_timestamp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/src/io_functions.html#get_iso_timestamp_from_int"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_functions.get_iso_timestamp_from_int" title="Link to this definition"></a></dt>
+<dd><p>This function takes an integer timestamp as input and converts it to an ISO timestamp.</p>
+<p>Parameters:
+int_timestamp (int): The integer timestamp.</p>
+<p>Returns:
+str: The ISO timestamp.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_functions.get_link_object_from_id">
+<span class="sig-prename descclassname"><span class="pre">src.io_functions.</span></span><span class="sig-name descname"><span class="pre">get_link_object_from_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">table_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/io_functions.html#get_link_object_from_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_functions.get_link_object_from_id" title="Link to this definition"></a></dt>
+<dd><p>This function retrieves data from a SQLite database based on the specified table name and ID.
+It takes a database name, a table name, and an ID as input and returns a DataFrame containing the retrieved data.</p>
+<p>Parameters:
+db_name (str): The name of the SQLite database.
+table_name (str): The name of the table to retrieve data from.
+id (int): The ID to retrieve data for.</p>
+<p>Returns:
+pd.DataFrame: A DataFrame containing the retrieved data.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_functions.get_netstore_data">
+<span class="sig-prename descclassname"><span class="pre">src.io_functions.</span></span><span class="sig-name descname"><span class="pre">get_netstore_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">object_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'fs_storage'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="_modules/src/io_functions.html#get_netstore_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_functions.get_netstore_data" title="Link to this definition"></a></dt>
+<dd><p>This function retrieves netstore data for a specific object ID from a SQLite database.
+It takes a database name, an object ID, and a source as input and returns a DataFrame containing the netstore data.</p>
+<p>Parameters:
+db_name (str): The name of the SQLite database.
+object_id (int): The ID of the object to retrieve data for.
+source (str, optional): The source of the object data. Defaults to ‘fs_storage’.</p>
+<p>Returns:
+pd.DataFrame: A DataFrame containing the netstore data for the specified object ID.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_functions.get_netstore_filelist">
+<span class="sig-prename descclassname"><span class="pre">src.io_functions.</span></span><span class="sig-name descname"><span class="pre">get_netstore_filelist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'/home/omero-import'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/io_functions.html#get_netstore_filelist"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_functions.get_netstore_filelist" title="Link to this definition"></a></dt>
+<dd><p>Organize the file paths into a dictionary based on the project names found in the file paths.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>folder</strong> – The path of the directory to traverse.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A tuple containing a list of project names and a dictionary where each key is a project name and the value is a list of file paths belonging to that project.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_functions.get_object_by_id">
+<span class="sig-prename descclassname"><span class="pre">src.io_functions.</span></span><span class="sig-name descname"><span class="pre">get_object_by_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">object_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">project_id</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">object</span></span></span><a class="reference internal" href="_modules/src/io_functions.html#get_object_by_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_functions.get_object_by_id" title="Link to this definition"></a></dt>
+<dd><p>This function retrieves an object from OMERO based on its name and ID.</p>
+<p>Parameters:
+object_name (str): The name of the object.
+project_id (int): The ID of the object.</p>
+<p>Returns:
+object: The retrieved object if found, otherwise None.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_functions.get_object_by_name">
+<span class="sig-prename descclassname"><span class="pre">src.io_functions.</span></span><span class="sig-name descname"><span class="pre">get_object_by_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">object_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">object_class</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Project'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">object</span></span></span><a class="reference internal" href="_modules/src/io_functions.html#get_object_by_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_functions.get_object_by_name" title="Link to this definition"></a></dt>
+<dd><p>This function retrieves an object from OMERO based on its name and class.</p>
+<p>Parameters:
+object_name (str): The name of the object.
+object_class (str): The class of the object. Default is ‘Project’.</p>
+<p>Returns:
+object: The ID of the retrieved object if found, otherwise None.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_functions.get_object_id_from_netstore_name">
+<span class="sig-prename descclassname"><span class="pre">src.io_functions.</span></span><span class="sig-name descname"><span class="pre">get_object_id_from_netstore_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">table_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">netstore_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="_modules/src/io_functions.html#get_object_id_from_netstore_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_functions.get_object_id_from_netstore_name" title="Link to this definition"></a></dt>
+<dd><p>This function retrieves the object ID from a NetStore name in a SQLite database table.
+It takes the database name, table name, and NetStore name as input and returns the object ID if it exists, or None otherwise.</p>
+<p>Parameters:
+db_name (str): The name of the SQLite database.
+table_name (str): The name of the table to search in.
+netstore_name (str): The NetStore name to search for.</p>
+<p>Returns:
+Optional[int]: The object ID if it exists, or None otherwise.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_functions.get_object_id_from_specific_id">
+<span class="sig-prename descclassname"><span class="pre">src.io_functions.</span></span><span class="sig-name descname"><span class="pre">get_object_id_from_specific_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">table_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">specific_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="_modules/src/io_functions.html#get_object_id_from_specific_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_functions.get_object_id_from_specific_id" title="Link to this definition"></a></dt>
+<dd><p>This function retrieves the object ID from a specific ID in a SQLite database table.
+It takes the database name, table name, and specific ID as input and returns the object ID if it exists, or None otherwise.</p>
+<p>Parameters:
+db_name (str): The name of the SQLite database.
+table_name (str): The name of the table to search in.
+specific_id (str): The specific ID to search for.</p>
+<p>Returns:
+Optional[int]: The object ID if it exists, or None otherwise.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_functions.get_placeholder_files_for_rspace">
+<span class="sig-prename descclassname"><span class="pre">src.io_functions.</span></span><span class="sig-name descname"><span class="pre">get_placeholder_files_for_rspace</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/io_functions.html#get_placeholder_files_for_rspace"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_functions.get_placeholder_files_for_rspace" title="Link to this definition"></a></dt>
+<dd><p>This function returns placeholder files for RSpace.</p>
+<p>Returns:
+list: A list of placeholder files.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_functions.get_possible_tags_list">
+<span class="sig-prename descclassname"><span class="pre">src.io_functions.</span></span><span class="sig-name descname"><span class="pre">get_possible_tags_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tags</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/src/io_functions.html#get_possible_tags_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_functions.get_possible_tags_list" title="Link to this definition"></a></dt>
+<dd><p>This function filters a list of tags based on certain patterns to remove irrelevant or invalid tags.
+It takes a list of tags as input and returns the filtered list of tags.</p>
+<p>Parameters:
+tags (List[str]): The list of tags to filter.</p>
+<p>Returns:
+List[str]: The filtered list of tags.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_functions.get_project_timestamps_from_fs_storage">
+<span class="sig-prename descclassname"><span class="pre">src.io_functions.</span></span><span class="sig-name descname"><span class="pre">get_project_timestamps_from_fs_storage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">object_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/src/io_functions.html#get_project_timestamps_from_fs_storage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_functions.get_project_timestamps_from_fs_storage" title="Link to this definition"></a></dt>
+<dd><p>This function retrieves the minimum created timestamp and the maximum timestamp between created and modified timestamps for a specific object ID in the fs_storage table of a SQLite database.
+It takes the database name and object ID as input and returns a tuple containing the minimum created timestamp and the maximum timestamp.</p>
+<p>Parameters:
+db_name (str): The name of the SQLite database.
+object_id (int): The object ID.</p>
+<p>Returns:
+Tuple[int, int]: A tuple containing the minimum created timestamp and the maximum timestamp.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_functions.get_project_user_tuple">
+<span class="sig-prename descclassname"><span class="pre">src.io_functions.</span></span><span class="sig-name descname"><span class="pre">get_project_user_tuple</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pm_title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/src/io_functions.html#get_project_user_tuple"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_functions.get_project_user_tuple" title="Link to this definition"></a></dt>
+<dd><p>This function takes a project title as input and extracts the project name and user information from it.
+The project name is expected to be present before the opening parenthesis in the project title.
+The user information is expected to be present between the opening and closing parentheses in the project title.
+The function returns a tuple containing the project name and user information.
+If there is no user information present in the project title, the function returns the project name and an empty string.</p>
+<p>Parameters:
+pm_title (str): The project title.</p>
+<p>Returns:
+Tuple[str, str]: A tuple containing the project name and user information.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_functions.get_remaining_path">
+<span class="sig-prename descclassname"><span class="pre">src.io_functions.</span></span><span class="sig-name descname"><span class="pre">get_remaining_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">full_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/src/io_functions.html#get_remaining_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_functions.get_remaining_path" title="Link to this definition"></a></dt>
+<dd><p>This function takes a full path and a base path as input and returns the remaining path.
+If the full path starts with the base path, it removes the base path from the full path and returns the remaining path.
+If the full path does not start with the base path, it returns the full path as is.</p>
+<p>Parameters:
+full_path (str): The full path.
+base_path (str): The base path.</p>
+<p>Returns:
+str: The remaining path.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_functions.get_rspace_workspace_folders">
+<span class="sig-prename descclassname"><span class="pre">src.io_functions.</span></span><span class="sig-name descname"><span class="pre">get_rspace_workspace_folders</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sampleParameter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elnName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'rspace'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/io_functions.html#get_rspace_workspace_folders"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_functions.get_rspace_workspace_folders" title="Link to this definition"></a></dt>
+<dd><p>This function retrieves workspace folders from RSpace inventory.</p>
+<p>Parameters:
+sampleParameter (str): The sample parameter.
+elnName (str): The ELN name. Default is ‘rspace’.</p>
+<p>Returns:
+dict: The JSON response containing the workspace folders.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_functions.get_sample_data_from_barcode">
+<span class="sig-prename descclassname"><span class="pre">src.io_functions.</span></span><span class="sig-name descname"><span class="pre">get_sample_data_from_barcode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sampleParameter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elnName</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'rspace'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/src/io_functions.html#get_sample_data_from_barcode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_functions.get_sample_data_from_barcode" title="Link to this definition"></a></dt>
+<dd><p>This function retrieves sample data from a barcode using the RSpace API.
+It takes the sample parameter and the ELN name as input and returns a dictionary containing the sample data.</p>
+<p>Parameters:
+sampleParameter (str): The sample parameter.
+elnName (str): The ELN name. Default is ‘rspace’.</p>
+<p>Returns:
+Dict[str, any]: A dictionary containing the sample data.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_functions.get_secret_api_parameters">
+<span class="sig-prename descclassname"><span class="pre">src.io_functions.</span></span><span class="sig-name descname"><span class="pre">get_secret_api_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'api_secrets.json'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'rspace'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/src/io_functions.html#get_secret_api_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_functions.get_secret_api_parameters" title="Link to this definition"></a></dt>
+<dd><p>This function reads a JSON file containing secret API parameters and returns a dictionary of parameters for a specific type.</p>
+<p>Parameters:
+source (str): The path to the JSON file containing secret API parameters. Default is ‘api_secrets.json’.
+type (str): The type of API parameters to return. Default is ‘rspace’.</p>
+<p>Returns:
+Dict[str, any]: A dictionary of API parameters for the specified type.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_functions.get_stopwords">
+<span class="sig-prename descclassname"><span class="pre">src.io_functions.</span></span><span class="sig-name descname"><span class="pre">get_stopwords</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'stopwords.json'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/src/io_functions.html#get_stopwords"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_functions.get_stopwords" title="Link to this definition"></a></dt>
+<dd><p>This function reads a JSON file containing stopwords and returns a list of stopwords.</p>
+<p>Parameters:
+source (str): The path to the JSON file containing stopwords. Default is ‘stopwords.json’.</p>
+<p>Returns:
+List[str]: A list of stopwords.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_functions.get_tag_description">
+<span class="sig-prename descclassname"><span class="pre">src.io_functions.</span></span><span class="sig-name descname"><span class="pre">get_tag_description</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">descriptions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/src/io_functions.html#get_tag_description"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_functions.get_tag_description" title="Link to this definition"></a></dt>
+<dd><p>This function retrieves the description of a tag from a dictionary of descriptions.
+It takes a tag name and a dictionary of descriptions as input and returns the description of the tag if it is present, or an empty string otherwise.</p>
+<p>Parameters:
+tag (str): The tag name.
+descriptions (dict): A dictionary of descriptions. Default is the output of get_description_dict().</p>
+<p>Returns:
+str: The description of the tag if it is present, or an empty string otherwise.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_functions.get_tags_from_id">
+<span class="sig-prename descclassname"><span class="pre">src.io_functions.</span></span><span class="sig-name descname"><span class="pre">get_tags_from_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'fs_storage'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/io_functions.html#get_tags_from_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_functions.get_tags_from_id" title="Link to this definition"></a></dt>
+<dd><p>This function retrieves tags from the database based on the object id and source.</p>
+<p>Parameters:
+db_name (str): The name of the database.
+id (int): The object id.
+df_type (str): The source type. Default is ‘fs_storage’.</p>
+<p>Returns:
+df (DataFrame): A pandas DataFrame containing the tag data.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_functions.get_tags_tuple">
+<span class="sig-prename descclassname"><span class="pre">src.io_functions.</span></span><span class="sig-name descname"><span class="pre">get_tags_tuple</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">conn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'inplace'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/src/io_functions.html#get_tags_tuple"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_functions.get_tags_tuple" title="Link to this definition"></a></dt>
+<dd><p>This function retrieves a list of tuples containing tag names and IDs for a specific user.
+It takes a connection object and a user name as input and returns a list of tuples containing tag names and IDs.</p>
+<p>Parameters:
+conn (object): The connection object.
+user (str): The user name. Default is ‘inplace’.</p>
+<p>Returns:
+List[Tuple[str, int]]: A list of tuples containing tag names and IDs.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_functions.insert_dict_to_database">
+<span class="sig-prename descclassname"><span class="pre">src.io_functions.</span></span><span class="sig-name descname"><span class="pre">insert_dict_to_database</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">table_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/src/io_functions.html#insert_dict_to_database"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_functions.insert_dict_to_database" title="Link to this definition"></a></dt>
+<dd><p>This function inserts a dictionary of data into a SQLite database table.
+It takes the database name, table name, and a dictionary of data as input.
+The keys of the dictionary are used as column names and the values are used as the corresponding row values.
+If an IntegrityError is raised, the function commits the changes and closes the connection.
+The function returns 1 if an IntegrityError is raised and 0 otherwise.</p>
+<p>Parameters:
+db_name (str): The name of the SQLite database.
+table_name (str): The name of the table to insert data into.
+data_dict (Dict[str, any]): A dictionary of data to insert into the table.</p>
+<p>Returns:
+int: 1 if an IntegrityError is raised, 0 otherwise.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_functions.insert_egroupware">
+<span class="sig-prename descclassname"><span class="pre">src.io_functions.</span></span><span class="sig-name descname"><span class="pre">insert_egroupware</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/io_functions.html#insert_egroupware"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_functions.insert_egroupware" title="Link to this definition"></a></dt>
+<dd><p>This function inserts project registration and schedule data from egroupware into the database.</p>
+<p>Parameters:
+verbose (int): Verbosity level. Default is 0.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_functions.is_string_in_list">
+<span class="sig-prename descclassname"><span class="pre">src.io_functions.</span></span><span class="sig-name descname"><span class="pre">is_string_in_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lst</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/src/io_functions.html#is_string_in_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_functions.is_string_in_list" title="Link to this definition"></a></dt>
+<dd><p>This function checks if a string is present in a list of tuples and returns the corresponding value.
+It takes a string and a list of tuples as input and returns the corresponding value if the string is present, or False otherwise.</p>
+<p>Parameters:
+s (str): The string to search for.
+lst (List[Tuple[str, int]]): The list of tuples to search in.</p>
+<p>Returns:
+int: The corresponding value if the string is present, or False otherwise.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_functions.load_json_file">
+<span class="sig-prename descclassname"><span class="pre">src.io_functions.</span></span><span class="sig-name descname"><span class="pre">load_json_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/src/io_functions.html#load_json_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_functions.load_json_file" title="Link to this definition"></a></dt>
+<dd><p>This function takes a file path as input and loads the JSON file at that path.
+It returns the JSON data as a dictionary.</p>
+<p>Parameters:
+file_path (str): The path to the JSON file.</p>
+<p>Returns:
+dict: The JSON data as a dictionary.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_functions.omero_inplace_bulk_import">
+<span class="sig-prename descclassname"><span class="pre">src.io_functions.</span></span><span class="sig-name descname"><span class="pre">omero_inplace_bulk_import</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bulk_file_src_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bulk_file_tar_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'~/groups/omero-import'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">docker_vol_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'/NETSTORE_omero-import'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">server</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'localhost'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'inplace'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'omero'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/io_functions.html#omero_inplace_bulk_import"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_functions.omero_inplace_bulk_import" title="Link to this definition"></a></dt>
+<dd><p>This function performs an bulk inplace import of csv file list of files/folder into target datasets on an OMERO server using Docker.
+It takes the target dataset, source file path, Docker volume path, server address, username, and password as input.</p>
+<p>Parameters:
+bulk_file_src_path (str): The source file path.
+bulk_file_tar_path (str): The target file path. Default is ‘~/groups/omero-import’.
+docker_vol_path (str): The Docker volume path. Default is ‘/NETSTORE_omero-import’.
+server (str): The server address. Default is ‘localhost’.
+username (str): The username. Default is ‘inplace’.
+password (str): The password. Default is ‘omero’.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_functions.omero_inplace_import">
+<span class="sig-prename descclassname"><span class="pre">src.io_functions.</span></span><span class="sig-name descname"><span class="pre">omero_inplace_import</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_ds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">src</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">docker_vol_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'/NETSTORE_omero-import'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">server</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'localhost'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'inplace'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'omero'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/src/io_functions.html#omero_inplace_import"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_functions.omero_inplace_import" title="Link to this definition"></a></dt>
+<dd><p>This function performs an inplace import of a source file into a target dataset on an OMERO server using Docker.
+It takes the target dataset, source file path, Docker volume path, server address, username, and password as input.</p>
+<p>Parameters:
+target_ds (str): The target dataset.
+src (str): The source file path.
+docker_vol_path (str): The Docker volume path. Default is ‘/NETSTORE_omero-import’.
+server (str): The server address. Default is ‘localhost’.
+username (str): The username. Default is ‘inplace’.
+password (str): The password. Default is ‘omero’.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_functions.process_rspace_documents">
+<span class="sig-prename descclassname"><span class="pre">src.io_functions.</span></span><span class="sig-name descname"><span class="pre">process_rspace_documents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">documents</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">table_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/io_functions.html#process_rspace_documents"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_functions.process_rspace_documents" title="Link to this definition"></a></dt>
+<dd><p>Process RSpace documents and insert them into the database.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>documents (dict): A dictionary containing the RSpace documents.
+db_name (str): The name of the database.
+table_name (str): The name of the table to insert the documents into.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_functions.process_rspace_folder">
+<span class="sig-prename descclassname"><span class="pre">src.io_functions.</span></span><span class="sig-name descname"><span class="pre">process_rspace_folder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">table_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/io_functions.html#process_rspace_folder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_functions.process_rspace_folder" title="Link to this definition"></a></dt>
+<dd><p>Process RSpace folders and insert them into the database.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>folders (dict): A dictionary containing the RSpace documents.
+db_name (str): The name of the database.
+table_name (str): The name of the table to insert the documents into.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_functions.process_tags">
+<span class="sig-prename descclassname"><span class="pre">src.io_functions.</span></span><span class="sig-name descname"><span class="pre">process_tags</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">table_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">object_document</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/io_functions.html#process_tags"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_functions.process_tags" title="Link to this definition"></a></dt>
+<dd><p>Process the tags of an RSpace document and insert them into the database.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>db_name (str): The name of the database.
+table_name (str): The name of the table to insert the tags into.
+doc (dict): The RSpace document.
+object_document (dict): The object document corresponding to the RSpace document.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_functions.remove_stopwords">
+<span class="sig-prename descclassname"><span class="pre">src.io_functions.</span></span><span class="sig-name descname"><span class="pre">remove_stopwords</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/src/io_functions.html#remove_stopwords"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_functions.remove_stopwords" title="Link to this definition"></a></dt>
+<dd><p>This function takes a string as input and removes stopwords from it.
+The function returns the string with stopwords removed.</p>
+<p>Parameters:
+text (str): The input string.</p>
+<p>Returns:
+str: The string with stopwords removed.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_functions.save_df">
+<span class="sig-prename descclassname"><span class="pre">src.io_functions.</span></span><span class="sig-name descname"><span class="pre">save_df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/src/io_functions.html#save_df"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_functions.save_df" title="Link to this definition"></a></dt>
+<dd><p>This function takes a file path and a DataFrame as input and saves the DataFrame to a CSV file at the specified path.</p>
+<p>Parameters:
+file_path (str): The path to the file.
+df (pd.DataFrame): The DataFrame to save.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_functions.search_documents">
+<span class="sig-prename descclassname"><span class="pre">src.io_functions.</span></span><span class="sig-name descname"><span class="pre">search_documents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">apikey</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'e7HV1YLT8BvhM2dSoVvzIyVK0svNexJq'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_url</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'https://rstest.int.lin-magdeburg.de/api/v1'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/io_functions.html#search_documents"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_functions.search_documents" title="Link to this definition"></a></dt>
+<dd><p>This function searches for a document in RSpace.</p>
+<p>Parameters:
+doc_name (str): The name of the document.
+apikey (str): The API key. Default is ‘e7HV1YLT8BvhM2dSoVvzIyVK0svNexJq’.
+base_url (str): The base URL. Default is ‘<a class="reference external" href="https://rstest.int.lin-magdeburg.de/api/v1">https://rstest.int.lin-magdeburg.de/api/v1</a>’.</p>
+<p>Returns:
+dict: The document information if found, otherwise 1.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_functions.search_folder">
+<span class="sig-prename descclassname"><span class="pre">src.io_functions.</span></span><span class="sig-name descname"><span class="pre">search_folder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">apikey</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'e7HV1YLT8BvhM2dSoVvzIyVK0svNexJq'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_url</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'https://rstest.int.lin-magdeburg.de/api/v1'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/io_functions.html#search_folder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_functions.search_folder" title="Link to this definition"></a></dt>
+<dd><p>This function searches for a folder in RSpace.</p>
+<p>Parameters:
+folder_name (str): The name of the folder.
+apikey (str): The API key. Default is ‘e7HV1YLT8BvhM2dSoVvzIyVK0svNexJq’.
+base_url (str): The base URL. Default is ‘<a class="reference external" href="https://rstest.int.lin-magdeburg.de/api/v1">https://rstest.int.lin-magdeburg.de/api/v1</a>’.</p>
+<p>Returns:
+dict: The folder information if found, otherwise 1.</p>
+</dd></dl>
+
+</section>
+<section id="module-src.io_metadata">
+<span id="src-io-metadata-module"></span><h2>src.io_metadata module<a class="headerlink" href="#module-src.io_metadata" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_metadata.extract_metadata">
+<span class="sig-prename descclassname"><span class="pre">src.io_metadata.</span></span><span class="sig-name descname"><span class="pre">extract_metadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputfolder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">showinfPath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">showinfParameter</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/io_metadata.html#extract_metadata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_metadata.extract_metadata" title="Link to this definition"></a></dt>
+<dd><p>This function extracts metadata from a file and saves it to an output folder.</p>
+<p>Parameters:
+file (str): The path to the file.
+outputfolder (str): The path to the output folder.
+showinfPath (str): The path to the showinf tool.
+showinfParameter (str): The parameters for the showinf tool.</p>
+<p>Returns:
+list: A list containing the extraction error, input file, output file, extension, and output folder.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_metadata.get_bf_metadata">
+<span class="sig-prename descclassname"><span class="pre">src.io_metadata.</span></span><span class="sig-name descname"><span class="pre">get_bf_metadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fileinput</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">showinfPath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">showinfParameter</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/io_metadata.html#get_bf_metadata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_metadata.get_bf_metadata" title="Link to this definition"></a></dt>
+<dd><p>This function extracts metadata from a file using the Bio-Formats showinf tool.</p>
+<p>Parameters:
+fileinput (str): The path to the file.
+showinfPath (str): The path to the showinf tool.
+showinfParameter (str): The parameters for the showinf tool.</p>
+<p>Returns:
+bytes: The metadata extracted from the file.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_metadata.get_init">
+<span class="sig-prename descclassname"><span class="pre">src.io_metadata.</span></span><span class="sig-name descname"><span class="pre">get_init</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/io_metadata.html#get_init"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_metadata.get_init" title="Link to this definition"></a></dt>
+<dd><p>This function reads the showinf parameters from a configuration file.</p>
+<p>Returns:
+tuple: A tuple containing the showinf path and parameters.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_metadata.get_inputlist">
+<span class="sig-prename descclassname"><span class="pre">src.io_metadata.</span></span><span class="sig-name descname"><span class="pre">get_inputlist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/io_metadata.html#get_inputlist"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_metadata.get_inputlist" title="Link to this definition"></a></dt>
+<dd><p>This function returns a list of files in a folder.</p>
+<p>Parameters:
+folder (str): The path to the folder.</p>
+<p>Returns:
+list: A list of files in the folder.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_metadata.is_tar_archive">
+<span class="sig-prename descclassname"><span class="pre">src.io_metadata.</span></span><span class="sig-name descname"><span class="pre">is_tar_archive</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/io_metadata.html#is_tar_archive"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_metadata.is_tar_archive" title="Link to this definition"></a></dt>
+<dd><p>This function checks if a file is a tar archive.</p>
+<p>Parameters:
+file (str): The path to the file.</p>
+<p>Returns:
+bool: True if the file is a tar archive, False otherwise.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_metadata.process_tar_gz">
+<span class="sig-prename descclassname"><span class="pre">src.io_metadata.</span></span><span class="sig-name descname"><span class="pre">process_tar_gz</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputfolder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tmp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/io_metadata.html#process_tar_gz"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_metadata.process_tar_gz" title="Link to this definition"></a></dt>
+<dd><p>This function processes a tar.gz file, extracts metadata from its contents, and saves the results to an output folder.</p>
+<p>Parameters:
+file_path (str): The path to the tar.gz file.
+outputfolder (str): The path to the output folder.
+tmp (int): A flag indicating whether to use a temporary directory for extraction. Default is 1.</p>
+<p>Returns:
+DataFrame: A DataFrame containing the extraction results.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_metadata.save_metadata">
+<span class="sig-prename descclassname"><span class="pre">src.io_metadata.</span></span><span class="sig-name descname"><span class="pre">save_metadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metadata</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputfolder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/io_metadata.html#save_metadata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_metadata.save_metadata" title="Link to this definition"></a></dt>
+<dd><p>This function saves metadata to a file.</p>
+<p>Parameters:
+metadata (str): The metadata to save.
+outputfolder (str): The path to the output folder.
+filename (str): The name of the output file.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_metadata.save_to_xml">
+<span class="sig-prename descclassname"><span class="pre">src.io_metadata.</span></span><span class="sig-name descname"><span class="pre">save_to_xml</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">concatMetadata</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputfolder</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/io_metadata.html#save_to_xml"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_metadata.save_to_xml" title="Link to this definition"></a></dt>
+<dd><p>This function saves a DataFrame to an XML file.</p>
+<p>Parameters:
+concatMetadata (DataFrame): The DataFrame to save.
+outputfolder (str): The path to the output folder.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.io_metadata.search_string_in_file">
+<span class="sig-prename descclassname"><span class="pre">src.io_metadata.</span></span><span class="sig-name descname"><span class="pre">search_string_in_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">search_string</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/io_metadata.html#search_string_in_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.io_metadata.search_string_in_file" title="Link to this definition"></a></dt>
+<dd><p>This function searches for a string in a file.</p>
+<p>Parameters:
+file (str): The path to the file.
+search_string (str): The string to search for.</p>
+<p>Returns:
+str: The line containing the string if found, otherwise an empty string.</p>
+</dd></dl>
+
+</section>
+<section id="module-src.llm_response">
+<span id="src-llm-response-module"></span><h2>src.llm_response module<a class="headerlink" href="#module-src.llm_response" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="src.llm_response.get_base_prompt">
+<span class="sig-prename descclassname"><span class="pre">src.llm_response.</span></span><span class="sig-name descname"><span class="pre">get_base_prompt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kind</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'short</span> <span class="pre">to</span> <span class="pre">long'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/llm_response.html#get_base_prompt"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.llm_response.get_base_prompt" title="Link to this definition"></a></dt>
+<dd><p>Get the base prompt for the model based on the kind of task.</p>
+<p>Parameters:
+- kind (str): The type of task (‘short to long’).</p>
+<p>Returns:
+- str: The base prompt for the model.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.llm_response.get_mistral_response">
+<span class="sig-prename descclassname"><span class="pre">src.llm_response.</span></span><span class="sig-name descname"><span class="pre">get_mistral_response</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prompt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">local</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/llm_response.html#get_mistral_response"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.llm_response.get_mistral_response" title="Link to this definition"></a></dt>
+<dd><p>Get a response from the Mistral model based on the provided prompt.</p>
+<p>Parameters:
+- prompt (str): The input prompt for the model.
+- local (bool): If True, use a local model. If False, use the Mistral API.</p>
+<p>Returns:
+- str: The response generated by the model.</p>
+</dd></dl>
+
+</section>
+<section id="module-src">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-src" title="Link to this heading"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="ols_lookup.html" class="btn btn-neutral float-left" title="ols_lookup module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, saibotMagd.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

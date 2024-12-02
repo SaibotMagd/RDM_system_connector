@@ -1,0 +1,933 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>all_to_db &mdash; RDM_system_connector documentation 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=2709fde1"></script>
+      <script src="../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            RDM_system_connector documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">RDM_system_connector</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">RDM_system_connector documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Module code</a></li>
+      <li class="breadcrumb-item active">all_to_db</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for all_to_db</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># coding: utf-8</span>
+<span class="kn">from</span> <span class="nn">src.io_metadata</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">data</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">src.io_functions</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">from</span> <span class="nn">tqdm.auto</span> <span class="kn">import</span> <span class="n">tqdm</span>
+
+<span class="c1">##################################################</span>
+<span class="c1"># EGROUPWARE -&gt; sqldb</span>
+<span class="c1"># load all projects from egroupware (last ~20s)</span>
+
+<div class="viewcode-block" id="insert_egroupware">
+<a class="viewcode-back" href="../all_to_db.html#all_to_db.insert_egroupware">[docs]</a>
+<span class="k">def</span> <span class="nf">insert_egroupware</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Fetches project data from eGroupWare and inserts it into a local database.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    verbose (int): If set to 1, prints the project registration and schedule data.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;https://egroupware.lin-magdeburg.de/abrechnung/api/projects.php?start=NaN&amp;end=NaN&quot;</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
+        <span class="n">content</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">text</span>
+    <span class="n">contents</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+    <span class="n">db_name</span> <span class="o">=</span> <span class="s1">&#39;sync_database.db&#39;</span>
+    <span class="n">table_name</span> <span class="o">=</span> <span class="s1">&#39;project_registration&#39;</span>
+    <span class="n">check_db_table</span><span class="p">(</span><span class="n">db_name</span><span class="p">,</span> <span class="n">table_name</span><span class="p">)</span>
+
+    <span class="c1"># Loop runs over all projects in eGroupWare</span>
+    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">contents</span><span class="p">:</span>
+        <span class="c1"># Take only HBI projects TODO: what about the other projects?</span>
+        <span class="k">if</span> <span class="n">c</span><span class="p">[</span><span class="s1">&#39;pm_group&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;HBI&quot;</span><span class="p">:</span>
+            <span class="k">continue</span>
+
+        <span class="c1"># Insert every project registration into the database</span>
+        <span class="n">table_name</span> <span class="o">=</span> <span class="s1">&#39;project_registration&#39;</span>
+        <span class="c1"># Split project_name &amp; user from pm_title field</span>
+        <span class="n">project_name</span><span class="p">,</span> <span class="n">user</span> <span class="o">=</span> <span class="n">get_project_user_tuple</span><span class="p">(</span><span class="n">c</span><span class="p">[</span><span class="s1">&#39;pm_title&#39;</span><span class="p">])</span>
+        <span class="n">user</span> <span class="o">=</span> <span class="n">user</span> <span class="k">if</span> <span class="n">user</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">account_lid</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;account_lid&#39;</span><span class="p">))</span> <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;account_lid&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">user</span> <span class="o">=</span> <span class="s2">&quot;;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">user</span><span class="p">,</span> <span class="n">account_lid</span><span class="p">])</span>
+        <span class="n">user</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="s2">&quot;;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="s2">&quot;;&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">user</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;;&quot;</span><span class="p">:</span>
+            <span class="n">user</span> <span class="o">=</span> <span class="n">user</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+        <span class="n">resources</span> <span class="o">=</span> <span class="n">c</span><span class="p">[</span><span class="s1">&#39;resources&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="s2">&quot;;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="s2">&quot;;&quot;</span><span class="p">)</span>
+        <span class="c1"># Get translation &amp; longer versions of short abbreviation to improve tag quality</span>
+        <span class="n">resources</span> <span class="o">=</span> <span class="n">convert_abbreviation</span><span class="p">(</span><span class="n">resources</span><span class="p">)</span>
+        <span class="n">project_registration</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;project_id&#39;</span><span class="p">:</span> <span class="n">c</span><span class="p">[</span><span class="s1">&#39;pm_id&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;project_name&#39;</span><span class="p">:</span> <span class="n">project_name</span><span class="p">,</span>
+            <span class="s1">&#39;user&#39;</span><span class="p">:</span> <span class="n">user</span><span class="p">,</span>
+            <span class="s1">&#39;start_timestamp&#39;</span><span class="p">:</span> <span class="n">c</span><span class="p">[</span><span class="s1">&#39;first&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;end_timestamp&#39;</span><span class="p">:</span> <span class="n">c</span><span class="p">[</span><span class="s1">&#39;last&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;resources&#39;</span><span class="p">:</span> <span class="n">resources</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">project_registration</span><span class="p">)</span>
+        <span class="n">insert_dict_to_database</span><span class="p">(</span><span class="n">db_name</span><span class="p">,</span> <span class="n">table_name</span><span class="p">,</span> <span class="n">project_registration</span><span class="p">)</span>
+
+        <span class="c1">#####################################################################</span>
+        <span class="c1"># Insert every schedule for each project into the database</span>
+        <span class="n">table_name</span> <span class="o">=</span> <span class="s1">&#39;project_schedule&#39;</span>
+        <span class="c1"># Take it from eGroupWare</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;https://egroupware.lin-magdeburg.de/abrechnung/api/measurements.php?start=NaN&amp;end=NaN&amp;hrstol=48&amp;project=</span><span class="si">{</span><span class="n">c</span><span class="p">[</span><span class="s1">&#39;pm_id&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">response</span><span class="p">:</span>
+            <span class="c1"># Take everything from schedule data that could be used as tag (here: description, name, bemerkung)</span>
+            <span class="c1"># Take care that it works even if something is empty</span>
+            <span class="n">notes</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;cal_description&#39;</span><span class="p">):</span>
+                <span class="n">notes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;description:&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;cal_description&#39;</span><span class="p">]))</span>
+            <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">):</span>
+                <span class="n">notes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;name:&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]))</span>
+            <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;bemerkung&#39;</span><span class="p">):</span>
+                <span class="n">notes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;note:&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;bemerkung&#39;</span><span class="p">]))</span>
+            <span class="n">notes</span> <span class="o">=</span> <span class="s2">&quot;;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">notes</span><span class="p">)</span>
+            <span class="n">notes</span> <span class="o">=</span> <span class="n">convert_abbreviation</span><span class="p">(</span><span class="n">notes</span><span class="p">)</span>
+            <span class="n">project_schedule</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;schedule_id&#39;</span><span class="p">:</span> <span class="n">r</span><span class="p">[</span><span class="s1">&#39;cal_id&#39;</span><span class="p">],</span>
+                <span class="s1">&#39;project_id&#39;</span><span class="p">:</span> <span class="n">c</span><span class="p">[</span><span class="s1">&#39;pm_id&#39;</span><span class="p">],</span>
+                <span class="s1">&#39;part_name&#39;</span><span class="p">:</span> <span class="n">r</span><span class="p">[</span><span class="s1">&#39;cal_title&#39;</span><span class="p">],</span>
+                <span class="s1">&#39;user&#39;</span><span class="p">:</span> <span class="n">user</span><span class="p">,</span>
+                <span class="s1">&#39;start_timestamp&#39;</span><span class="p">:</span> <span class="n">r</span><span class="p">[</span><span class="s1">&#39;human_cal_start&#39;</span><span class="p">],</span>
+                <span class="s1">&#39;end_timestamp&#39;</span><span class="p">:</span> <span class="n">r</span><span class="p">[</span><span class="s1">&#39;human_cal_end&#39;</span><span class="p">],</span>
+                <span class="s1">&#39;notes&#39;</span><span class="p">:</span> <span class="n">notes</span>
+            <span class="p">}</span>
+            <span class="n">insert_dict_to_database</span><span class="p">(</span><span class="n">db_name</span><span class="p">,</span> <span class="n">table_name</span><span class="p">,</span> <span class="n">project_schedule</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">project_schedule</span><span class="p">)</span></div>
+
+
+<span class="c1">#!/usr/bin/env python</span>
+<span class="c1"># coding: utf-8</span>
+<span class="c1">##################################################</span>
+<span class="c1"># RSPACE -&gt; sqldb</span>
+<span class="c1"># 2 read rspace</span>
+
+<div class="viewcode-block" id="insert_rspace_to_db">
+<a class="viewcode-back" href="../all_to_db.html#all_to_db.insert_rspace_to_db">[docs]</a>
+<span class="k">def</span> <span class="nf">insert_rspace_to_db</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Fetches sample data from RSpace and inserts it into a local database.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    None</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">rspace_docs</span> <span class="o">=</span> <span class="n">get_sample_data_from_barcode</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="n">db_name</span> <span class="o">=</span> <span class="s1">&#39;sync_database.db&#39;</span>
+    <span class="n">table_name</span> <span class="o">=</span> <span class="s1">&#39;object&#39;</span>
+    <span class="n">check_db_table</span><span class="p">(</span><span class="n">db_name</span><span class="p">,</span> <span class="n">table_name</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">single_doc</span> <span class="ow">in</span> <span class="n">rspace_docs</span><span class="p">[</span><span class="s1">&#39;documents&#39;</span><span class="p">]:</span>
+        <span class="c1"># Add the RSpace document entries into the database</span>
+        <span class="n">table_name</span> <span class="o">=</span> <span class="s1">&#39;object&#39;</span>
+        <span class="n">notes</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">single_doc</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;tags&#39;</span><span class="p">):</span>
+            <span class="n">notes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">single_doc</span><span class="p">[</span><span class="s1">&#39;tags&#39;</span><span class="p">]))</span>
+        <span class="k">if</span> <span class="n">single_doc</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;tags&#39;</span><span class="p">):</span>
+            <span class="n">notes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">single_doc</span><span class="p">[</span><span class="s1">&#39;tagMetaData&#39;</span><span class="p">]))</span>
+        <span class="n">notes</span> <span class="o">=</span> <span class="s2">&quot;;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">notes</span><span class="p">)</span>
+        <span class="n">notes</span> <span class="o">=</span> <span class="n">get_cleaned_tag_string</span><span class="p">(</span><span class="n">notes</span><span class="p">)</span>
+        <span class="n">object_document</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;object_name&#39;</span><span class="p">:</span> <span class="n">single_doc</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;object_type&#39;</span><span class="p">:</span> <span class="s1">&#39;document&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;specific_id&#39;</span><span class="p">:</span> <span class="n">single_doc</span><span class="p">[</span><span class="s1">&#39;globalId&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;user&#39;</span><span class="p">:</span> <span class="n">single_doc</span><span class="p">[</span><span class="s1">&#39;owner&#39;</span><span class="p">][</span><span class="s1">&#39;username&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;created_timestamp&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">single_doc</span><span class="p">[</span><span class="s1">&#39;created&#39;</span><span class="p">],</span> <span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">T%H:%M:%S.</span><span class="si">%f</span><span class="s2">Z&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">),</span>
+            <span class="s1">&#39;modified_timestamp&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">single_doc</span><span class="p">[</span><span class="s1">&#39;lastModified&#39;</span><span class="p">],</span> <span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">T%H:%M:%S.</span><span class="si">%f</span><span class="s2">Z&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">),</span>
+            <span class="s1">&#39;notes&#39;</span><span class="p">:</span> <span class="n">notes</span><span class="p">,</span>
+            <span class="s1">&#39;source&#39;</span><span class="p">:</span> <span class="s1">&#39;rspace&#39;</span>
+        <span class="p">}</span>
+        <span class="c1"># If the entry is already in the database, don&#39;t insert it again (have to be checked because the ELN ID isn&#39;t the unique ID in the database)</span>
+        <span class="k">if</span> <span class="n">check_if_entry_exists</span><span class="p">(</span><span class="n">db_name</span><span class="p">,</span> <span class="n">table_name</span><span class="p">,</span> <span class="n">object_document</span><span class="p">):</span>
+            <span class="k">continue</span>
+        <span class="n">insert_dict_to_database</span><span class="p">(</span><span class="n">db_name</span><span class="p">,</span> <span class="n">table_name</span><span class="p">,</span> <span class="n">object_document</span><span class="p">)</span>
+
+        <span class="c1">#######################################################################</span>
+        <span class="c1"># Insert the RSpace tag entries into the database</span>
+        <span class="c1"># Get the object_id from the object table and use it to chain the document and the tag</span>
+        <span class="n">object_id</span> <span class="o">=</span> <span class="n">get_object_id_from_specific_id</span><span class="p">(</span><span class="n">db_name</span><span class="p">,</span> <span class="n">table_name</span><span class="p">,</span> <span class="n">single_doc</span><span class="p">[</span><span class="s1">&#39;globalId&#39;</span><span class="p">])</span>
+        <span class="n">table_name</span> <span class="o">=</span> <span class="s1">&#39;tag&#39;</span>
+        <span class="n">notes</span> <span class="o">=</span> <span class="n">notes</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">note</span> <span class="ow">in</span> <span class="n">notes</span><span class="p">:</span>
+            <span class="n">trans_note</span> <span class="o">=</span> <span class="n">get_cleaned_tag_string</span><span class="p">(</span><span class="n">note</span><span class="p">)</span>
+            <span class="n">trans_note</span> <span class="o">=</span> <span class="n">convert_abbreviation</span><span class="p">(</span><span class="n">trans_note</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">trans_note</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">tag</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;object_id&#39;</span><span class="p">:</span> <span class="n">object_id</span><span class="p">,</span>
+                <span class="s1">&#39;tag_name&#39;</span><span class="p">:</span> <span class="n">note</span><span class="p">,</span>
+                <span class="s1">&#39;translated_tag_name&#39;</span><span class="p">:</span> <span class="n">trans_note</span><span class="p">,</span>
+                <span class="s1">&#39;created_timestamp&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">single_doc</span><span class="p">[</span><span class="s1">&#39;created&#39;</span><span class="p">],</span> <span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">T%H:%M:%S.</span><span class="si">%f</span><span class="s2">Z&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">),</span>
+                <span class="s1">&#39;modified_timestamp&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">single_doc</span><span class="p">[</span><span class="s1">&#39;lastModified&#39;</span><span class="p">],</span> <span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">T%H:%M:%S.</span><span class="si">%f</span><span class="s2">Z&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">),</span>
+                <span class="s1">&#39;used&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="n">get_tag_description</span><span class="p">(</span><span class="n">trans_note</span><span class="p">),</span>
+                <span class="s1">&#39;source&#39;</span><span class="p">:</span> <span class="s1">&#39;rspace&#39;</span>
+            <span class="p">}</span>
+            <span class="n">insert_dict_to_database</span><span class="p">(</span><span class="n">db_name</span><span class="p">,</span> <span class="n">table_name</span><span class="p">,</span> <span class="n">tag</span><span class="p">)</span>
+    <span class="n">delete_duplicate_tags</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="convert_rspace_timestamp">
+<a class="viewcode-back" href="../all_to_db.html#all_to_db.convert_rspace_timestamp">[docs]</a>
+<span class="k">def</span> <span class="nf">convert_rspace_timestamp</span><span class="p">(</span><span class="n">timestamp</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Converts an RSpace timestamp to a standard datetime format.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    timestamp (str): The RSpace timestamp in the format &quot;%Y-%m-%dT%H:%M:%S.%fZ&quot;.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    str: The converted timestamp in the format &quot;%Y-%m-%d %H:%M:%S&quot;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">timestamp</span><span class="p">,</span> <span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">T%H:%M:%S.</span><span class="si">%f</span><span class="s2">Z&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="process_rspace_documents">
+<a class="viewcode-back" href="../all_to_db.html#all_to_db.process_rspace_documents">[docs]</a>
+<span class="k">def</span> <span class="nf">process_rspace_documents</span><span class="p">(</span><span class="n">documents</span><span class="p">,</span> <span class="n">db_name</span><span class="p">,</span> <span class="n">table_name</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Process RSpace documents and insert them into the database.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        documents (dict): A dictionary containing the RSpace documents.</span>
+<span class="sd">        db_name (str): The name of the database.</span>
+<span class="sd">        table_name (str): The name of the table to insert the documents into.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">check_db_table</span><span class="p">(</span><span class="n">db_name</span><span class="p">,</span> <span class="n">table_name</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">documents</span><span class="p">[</span><span class="s1">&#39;documents&#39;</span><span class="p">]:</span>
+        <span class="n">notes</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">doc</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;tags&#39;</span><span class="p">):</span>
+            <span class="n">notes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">doc</span><span class="p">[</span><span class="s1">&#39;tags&#39;</span><span class="p">]))</span>
+        <span class="k">if</span> <span class="n">doc</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;tagMetaData&#39;</span><span class="p">):</span>
+            <span class="n">notes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">doc</span><span class="p">[</span><span class="s1">&#39;tagMetaData&#39;</span><span class="p">]))</span>
+
+        <span class="n">notes</span> <span class="o">=</span> <span class="s2">&quot;;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">notes</span><span class="p">)</span>
+        <span class="n">notes</span> <span class="o">=</span> <span class="n">get_cleaned_tag_string</span><span class="p">(</span><span class="n">notes</span><span class="p">)</span>
+
+        <span class="n">object_document</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;object_name&#39;</span><span class="p">:</span> <span class="n">doc</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;object_type&#39;</span><span class="p">:</span> <span class="s1">&#39;document&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;specific_id&#39;</span><span class="p">:</span> <span class="n">doc</span><span class="p">[</span><span class="s1">&#39;globalId&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;user&#39;</span><span class="p">:</span> <span class="n">doc</span><span class="p">[</span><span class="s1">&#39;owner&#39;</span><span class="p">][</span><span class="s1">&#39;username&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;created_timestamp&#39;</span><span class="p">:</span> <span class="n">convert_rspace_timestamp</span><span class="p">(</span><span class="n">doc</span><span class="p">[</span><span class="s1">&#39;created&#39;</span><span class="p">]),</span>
+            <span class="s1">&#39;modified_timestamp&#39;</span><span class="p">:</span> <span class="n">convert_rspace_timestamp</span><span class="p">(</span><span class="n">doc</span><span class="p">[</span><span class="s1">&#39;lastModified&#39;</span><span class="p">]),</span>
+            <span class="s1">&#39;notes&#39;</span><span class="p">:</span> <span class="n">notes</span><span class="p">,</span>
+            <span class="s1">&#39;source&#39;</span><span class="p">:</span> <span class="s1">&#39;rspace&#39;</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span> <span class="n">check_if_entry_exists</span><span class="p">(</span><span class="n">db_name</span><span class="p">,</span> <span class="n">table_name</span><span class="p">,</span> <span class="n">object_document</span><span class="p">):</span>
+            <span class="k">continue</span>
+
+        <span class="n">insert_dict_to_database</span><span class="p">(</span><span class="n">db_name</span><span class="p">,</span> <span class="n">table_name</span><span class="p">,</span> <span class="n">object_document</span><span class="p">)</span>
+        <span class="n">process_tags</span><span class="p">(</span><span class="n">db_name</span><span class="p">,</span> <span class="n">table_name</span><span class="p">,</span> <span class="n">doc</span><span class="p">,</span> <span class="n">object_document</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="process_rspace_folder">
+<a class="viewcode-back" href="../all_to_db.html#all_to_db.process_rspace_folder">[docs]</a>
+<span class="k">def</span> <span class="nf">process_rspace_folder</span><span class="p">(</span><span class="n">folder</span><span class="p">,</span> <span class="n">db_name</span><span class="p">,</span> <span class="n">table_name</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Process RSpace folders and insert them into the database.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        folders (dict): A dictionary containing the RSpace documents.</span>
+<span class="sd">        db_name (str): The name of the database.</span>
+<span class="sd">        table_name (str): The name of the table to insert the documents into.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">check_db_table</span><span class="p">(</span><span class="n">db_name</span><span class="p">,</span> <span class="n">table_name</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">folder</span><span class="p">[</span><span class="s1">&#39;records&#39;</span><span class="p">]:</span>
+        <span class="n">notes</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">doc</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;tags&#39;</span><span class="p">):</span>
+            <span class="n">notes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">doc</span><span class="p">[</span><span class="s1">&#39;tags&#39;</span><span class="p">]))</span>
+        <span class="k">if</span> <span class="n">doc</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;tagMetaData&#39;</span><span class="p">):</span>
+            <span class="n">notes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">doc</span><span class="p">[</span><span class="s1">&#39;tagMetaData&#39;</span><span class="p">]))</span>
+
+        <span class="n">notes</span> <span class="o">=</span> <span class="s2">&quot;;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">notes</span><span class="p">)</span>
+        <span class="n">notes</span> <span class="o">=</span> <span class="n">get_cleaned_tag_string</span><span class="p">(</span><span class="n">notes</span><span class="p">)</span>
+
+        <span class="n">object_document</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;object_name&#39;</span><span class="p">:</span> <span class="n">doc</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;object_type&#39;</span><span class="p">:</span> <span class="s1">&#39;folder&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;specific_id&#39;</span><span class="p">:</span> <span class="n">doc</span><span class="p">[</span><span class="s1">&#39;globalId&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;user&#39;</span><span class="p">:</span> <span class="n">doc</span><span class="p">[</span><span class="s1">&#39;owner&#39;</span><span class="p">][</span><span class="s1">&#39;username&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;created_timestamp&#39;</span><span class="p">:</span> <span class="n">convert_rspace_timestamp</span><span class="p">(</span><span class="n">doc</span><span class="p">[</span><span class="s1">&#39;created&#39;</span><span class="p">]),</span>
+            <span class="s1">&#39;modified_timestamp&#39;</span><span class="p">:</span> <span class="n">convert_rspace_timestamp</span><span class="p">(</span><span class="n">doc</span><span class="p">[</span><span class="s1">&#39;lastModified&#39;</span><span class="p">]),</span>
+            <span class="s1">&#39;notes&#39;</span><span class="p">:</span> <span class="n">notes</span><span class="p">,</span>
+            <span class="s1">&#39;source&#39;</span><span class="p">:</span> <span class="s1">&#39;rspace&#39;</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span> <span class="n">check_if_entry_exists</span><span class="p">(</span><span class="n">db_name</span><span class="p">,</span> <span class="n">table_name</span><span class="p">,</span> <span class="n">object_document</span><span class="p">):</span>
+            <span class="k">continue</span>
+
+        <span class="n">insert_dict_to_database</span><span class="p">(</span><span class="n">db_name</span><span class="p">,</span> <span class="n">table_name</span><span class="p">,</span> <span class="n">object_document</span><span class="p">)</span>
+        <span class="n">process_tags</span><span class="p">(</span><span class="n">db_name</span><span class="p">,</span> <span class="n">table_name</span><span class="p">,</span> <span class="n">doc</span><span class="p">,</span> <span class="n">object_document</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="get_rspace_workspace_folders">
+<a class="viewcode-back" href="../all_to_db.html#all_to_db.get_rspace_workspace_folders">[docs]</a>
+<span class="k">def</span> <span class="nf">get_rspace_workspace_folders</span><span class="p">(</span><span class="n">sampleParameter</span><span class="p">,</span> <span class="n">elnName</span><span class="o">=</span><span class="s1">&#39;rspace&#39;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Fetches RSpace workspace folders using the API.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        sampleParameter (str): A sample parameter for the API request.</span>
+<span class="sd">        elnName (str): The name of the ELN (default is &#39;rspace&#39;).</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: The JSON response containing the workspace folders.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">apiParams</span> <span class="o">=</span> <span class="n">get_secret_api_parameters</span><span class="p">()</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+        <span class="o">*</span><span class="p">[</span><span class="n">apiParams</span><span class="p">[</span><span class="s1">&#39;apiUrl&#39;</span><span class="p">],</span> <span class="n">apiParams</span><span class="p">[</span><span class="s1">&#39;apiInventoryPath&#39;</span><span class="p">],</span> <span class="n">apiParams</span><span class="p">[</span><span class="s1">&#39;apiWorkspaceFolder&#39;</span><span class="p">]])</span>
+    <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;accept&quot;</span><span class="p">:</span> <span class="s2">&quot;application/json&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;apiKey&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">apiParams</span><span class="p">[</span><span class="s1">&#39;apiKey&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">}</span>
+    <span class="c1"># Create the search-json for searching in RSpace inventory</span>
+    <span class="k">if</span> <span class="n">elnName</span> <span class="o">==</span> <span class="s1">&#39;rspace&#39;</span><span class="p">:</span>
+        <span class="n">insertDict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;pageNumber&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;pageSize&quot;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span> <span class="s2">&quot;orderBy&quot;</span><span class="p">:</span> <span class="s2">&quot;name asc&quot;</span><span class="p">}</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">r</span></div>
+
+
+<div class="viewcode-block" id="process_tags">
+<a class="viewcode-back" href="../all_to_db.html#all_to_db.process_tags">[docs]</a>
+<span class="k">def</span> <span class="nf">process_tags</span><span class="p">(</span><span class="n">db_name</span><span class="p">,</span> <span class="n">table_name</span><span class="p">,</span> <span class="n">doc</span><span class="p">,</span> <span class="n">object_document</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Process the tags of an RSpace document and insert them into the database.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        db_name (str): The name of the database.</span>
+<span class="sd">        table_name (str): The name of the table to insert the tags into.</span>
+<span class="sd">        doc (dict): The RSpace document.</span>
+<span class="sd">        object_document (dict): The object document corresponding to the RSpace document.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">object_id</span> <span class="o">=</span> <span class="n">get_object_id_from_specific_id</span><span class="p">(</span>
+        <span class="n">db_name</span><span class="p">,</span> <span class="n">table_name</span><span class="p">,</span> <span class="n">doc</span><span class="p">[</span><span class="s1">&#39;globalId&#39;</span><span class="p">])</span>
+    <span class="n">table_name</span> <span class="o">=</span> <span class="s1">&#39;tag&#39;</span>
+    <span class="n">notes</span> <span class="o">=</span> <span class="n">object_document</span><span class="p">[</span><span class="s1">&#39;notes&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">note</span> <span class="ow">in</span> <span class="n">notes</span><span class="p">:</span>
+        <span class="n">trans_note</span> <span class="o">=</span> <span class="n">get_cleaned_tag_string</span><span class="p">(</span><span class="n">note</span><span class="p">)</span>
+        <span class="n">trans_note</span> <span class="o">=</span> <span class="n">convert_abbreviation</span><span class="p">(</span><span class="n">trans_note</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">trans_note</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+            <span class="k">continue</span>
+
+        <span class="n">tag</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;object_id&#39;</span><span class="p">:</span> <span class="n">object_id</span><span class="p">,</span>
+            <span class="s1">&#39;tag_name&#39;</span><span class="p">:</span> <span class="n">note</span><span class="p">,</span>
+            <span class="s1">&#39;translated_tag_name&#39;</span><span class="p">:</span> <span class="n">trans_note</span><span class="p">,</span>
+            <span class="s1">&#39;created_timestamp&#39;</span><span class="p">:</span> <span class="n">convert_rspace_timestamp</span><span class="p">(</span><span class="n">doc</span><span class="p">[</span><span class="s1">&#39;created&#39;</span><span class="p">]),</span>
+            <span class="s1">&#39;modified_timestamp&#39;</span><span class="p">:</span> <span class="n">convert_rspace_timestamp</span><span class="p">(</span><span class="n">doc</span><span class="p">[</span><span class="s1">&#39;lastModified&#39;</span><span class="p">]),</span>
+            <span class="s1">&#39;used&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="n">get_tag_description</span><span class="p">(</span><span class="n">trans_note</span><span class="p">),</span>
+            <span class="s1">&#39;source&#39;</span><span class="p">:</span> <span class="s1">&#39;rspace&#39;</span>
+        <span class="p">}</span>
+
+        <span class="n">insert_dict_to_database</span><span class="p">(</span><span class="n">db_name</span><span class="p">,</span> <span class="n">table_name</span><span class="p">,</span> <span class="n">tag</span><span class="p">)</span></div>
+
+
+<span class="c1">#!/usr/bin/env python</span>
+<span class="c1"># coding: utf-8</span>
+<span class="c1">##################################################</span>
+<span class="c1"># OMERO -&gt; sqldb</span>
+
+<div class="viewcode-block" id="convert_omero_timestamp">
+<a class="viewcode-back" href="../all_to_db.html#all_to_db.convert_omero_timestamp">[docs]</a>
+<span class="k">def</span> <span class="nf">convert_omero_timestamp</span><span class="p">(</span><span class="n">timestamp</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Converts an OMERO timestamp to a standard datetime format.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        timestamp (str): The OMERO timestamp in the format &quot;%Y-%m-%dT%H:%M:%S&quot;.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The converted timestamp in the format &quot;%Y-%m-%d %H:%M:%S&quot;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">timestamp</span><span class="p">,</span> <span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">T%H:%M:%S&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="auto_insert_omero_to_database">
+<a class="viewcode-back" href="../all_to_db.html#all_to_db.auto_insert_omero_to_database">[docs]</a>
+<span class="k">def</span> <span class="nf">auto_insert_omero_to_database</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Automatically inserts OMERO data into the database.</span>
+
+<span class="sd">    This function connects to the OMERO server, retrieves projects, datasets, and images,</span>
+<span class="sd">    and inserts them along with their tags into the specified database tables.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Import the necessary libraries</span>
+    <span class="kn">from</span> <span class="nn">omero.gateway</span> <span class="kn">import</span> <span class="n">BlitzGateway</span>
+
+    <span class="c1"># Establish a connection to the OMERO server</span>
+    <span class="n">conn</span> <span class="o">=</span> <span class="n">BlitzGateway</span><span class="p">(</span><span class="s1">&#39;inplace&#39;</span><span class="p">,</span> <span class="s1">&#39;omero&#39;</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="s1">&#39;0.0.0.0&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">4064</span><span class="p">)</span>
+    <span class="n">conn</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+
+    <span class="c1"># Define the database and table names</span>
+    <span class="n">db_name</span> <span class="o">=</span> <span class="s1">&#39;sync_database.db&#39;</span>
+    <span class="n">object_table_name</span> <span class="o">=</span> <span class="s1">&#39;object&#39;</span>
+    <span class="n">tag_table_name</span> <span class="o">=</span> <span class="s1">&#39;tag&#39;</span>
+
+    <span class="c1"># Check if the database and tables exist, if not, create them</span>
+    <span class="n">check_db_table</span><span class="p">(</span><span class="n">db_name</span><span class="p">,</span> <span class="n">object_table_name</span><span class="p">)</span>
+    <span class="n">check_db_table</span><span class="p">(</span><span class="n">db_name</span><span class="p">,</span> <span class="n">tag_table_name</span><span class="p">)</span>
+
+    <span class="c1"># Get all projects from OMERO</span>
+    <span class="n">projects</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">getObjects</span><span class="p">(</span><span class="s2">&quot;Project&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Iterate over each project</span>
+    <span class="k">for</span> <span class="n">project</span> <span class="ow">in</span> <span class="n">projects</span><span class="p">:</span>
+        <span class="c1"># Extract project data</span>
+        <span class="n">project_data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;object_name&#39;</span><span class="p">:</span> <span class="n">project</span><span class="o">.</span><span class="n">simpleMarshal</span><span class="p">()[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;object_type&#39;</span><span class="p">:</span> <span class="n">project</span><span class="o">.</span><span class="n">simpleMarshal</span><span class="p">()[</span><span class="s1">&#39;type&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;specific_id&#39;</span><span class="p">:</span> <span class="n">project</span><span class="o">.</span><span class="n">simpleMarshal</span><span class="p">()[</span><span class="s1">&#39;id&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;user&#39;</span><span class="p">:</span> <span class="n">project</span><span class="o">.</span><span class="n">getOwnerOmeName</span><span class="p">(),</span>
+            <span class="s1">&#39;created_timestamp&#39;</span><span class="p">:</span> <span class="n">convert_omero_timestamp</span><span class="p">(</span><span class="n">project</span><span class="o">.</span><span class="n">creationEventDate</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()),</span>
+            <span class="s1">&#39;modified_timestamp&#39;</span><span class="p">:</span> <span class="n">convert_omero_timestamp</span><span class="p">(</span><span class="n">project</span><span class="o">.</span><span class="n">updateEventDate</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()),</span>
+            <span class="s1">&#39;notes&#39;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;source&#39;</span><span class="p">:</span> <span class="s1">&#39;omero&#39;</span>
+        <span class="p">}</span>
+        <span class="c1"># Insert project data into the database</span>
+        <span class="n">insert_dict_to_database</span><span class="p">(</span><span class="n">db_name</span><span class="p">,</span> <span class="n">object_table_name</span><span class="p">,</span> <span class="n">project_data</span><span class="p">)</span>
+
+        <span class="c1"># Iterate over each tag in the project and add it to the database</span>
+        <span class="k">for</span> <span class="n">tag_entry</span> <span class="ow">in</span> <span class="n">project</span><span class="o">.</span><span class="n">listAnnotations</span><span class="p">():</span>
+            <span class="c1"># Extract and process tag data</span>
+            <span class="n">trans_note</span> <span class="o">=</span> <span class="n">get_cleaned_tag_string</span><span class="p">(</span><span class="n">tag_entry</span><span class="o">.</span><span class="n">getValue</span><span class="p">())</span>
+            <span class="n">trans_note</span> <span class="o">=</span> <span class="n">convert_abbreviation</span><span class="p">(</span><span class="n">trans_note</span><span class="p">)</span>
+            <span class="n">tag_data</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;object_id&#39;</span><span class="p">:</span> <span class="n">project</span><span class="o">.</span><span class="n">simpleMarshal</span><span class="p">()[</span><span class="s1">&#39;id&#39;</span><span class="p">],</span>
+                <span class="s1">&#39;object_type&#39;</span><span class="p">:</span> <span class="n">project</span><span class="o">.</span><span class="n">simpleMarshal</span><span class="p">()[</span><span class="s1">&#39;type&#39;</span><span class="p">],</span>
+                <span class="s1">&#39;tag_name&#39;</span><span class="p">:</span> <span class="n">tag_entry</span><span class="o">.</span><span class="n">getValue</span><span class="p">(),</span>
+                <span class="s1">&#39;translated_tag_name&#39;</span><span class="p">:</span> <span class="n">trans_note</span><span class="p">,</span>
+                <span class="s1">&#39;created_timestamp&#39;</span><span class="p">:</span> <span class="n">convert_omero_timestamp</span><span class="p">(</span><span class="n">tag_entry</span><span class="o">.</span><span class="n">creationEventDate</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()),</span>
+                <span class="s1">&#39;modified_timestamp&#39;</span><span class="p">:</span> <span class="n">convert_omero_timestamp</span><span class="p">(</span><span class="n">tag_entry</span><span class="o">.</span><span class="n">creationEventDate</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()),</span>
+                <span class="s1">&#39;used&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="n">get_tag_description</span><span class="p">(</span><span class="n">trans_note</span><span class="p">),</span>
+                <span class="s1">&#39;source&#39;</span><span class="p">:</span> <span class="s1">&#39;omero&#39;</span>
+            <span class="p">}</span>
+            <span class="c1"># Insert tag data into the database</span>
+            <span class="n">insert_dict_to_database</span><span class="p">(</span><span class="n">db_name</span><span class="p">,</span> <span class="n">tag_table_name</span><span class="p">,</span> <span class="n">tag_data</span><span class="p">)</span>
+
+        <span class="c1"># Iterate over each dataset in the project</span>
+        <span class="k">for</span> <span class="n">dataset</span> <span class="ow">in</span> <span class="n">project</span><span class="o">.</span><span class="n">listChildren</span><span class="p">():</span>
+            <span class="c1"># Extract dataset data</span>
+            <span class="n">dataset_data</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;object_name&#39;</span><span class="p">:</span> <span class="n">dataset</span><span class="o">.</span><span class="n">simpleMarshal</span><span class="p">()[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span>
+                <span class="s1">&#39;object_type&#39;</span><span class="p">:</span> <span class="n">dataset</span><span class="o">.</span><span class="n">simpleMarshal</span><span class="p">()[</span><span class="s1">&#39;type&#39;</span><span class="p">],</span>
+                <span class="s1">&#39;specific_id&#39;</span><span class="p">:</span> <span class="n">dataset</span><span class="o">.</span><span class="n">simpleMarshal</span><span class="p">()[</span><span class="s1">&#39;id&#39;</span><span class="p">],</span>
+                <span class="s1">&#39;user&#39;</span><span class="p">:</span> <span class="n">dataset</span><span class="o">.</span><span class="n">getOwnerOmeName</span><span class="p">(),</span>
+                <span class="s1">&#39;created_timestamp&#39;</span><span class="p">:</span> <span class="n">convert_omero_timestamp</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">creationEventDate</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()),</span>
+                <span class="s1">&#39;modified_timestamp&#39;</span><span class="p">:</span> <span class="n">convert_omero_timestamp</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">updateEventDate</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()),</span>
+                <span class="s1">&#39;notes&#39;</span><span class="p">:</span> <span class="n">dataset</span><span class="o">.</span><span class="n">simpleMarshal</span><span class="p">()[</span><span class="s1">&#39;description&#39;</span><span class="p">],</span>
+                <span class="s1">&#39;source&#39;</span><span class="p">:</span> <span class="s1">&#39;omero&#39;</span>
+            <span class="p">}</span>
+            <span class="c1"># Insert dataset data into the database</span>
+            <span class="n">insert_dict_to_database</span><span class="p">(</span><span class="n">db_name</span><span class="p">,</span> <span class="n">object_table_name</span><span class="p">,</span> <span class="n">dataset_data</span><span class="p">)</span>
+
+            <span class="c1"># Iterate over each tag in the dataset and add it to the database</span>
+            <span class="k">for</span> <span class="n">tag_entry</span> <span class="ow">in</span> <span class="n">dataset</span><span class="o">.</span><span class="n">listAnnotations</span><span class="p">():</span>
+                <span class="c1"># Extract and process tag data</span>
+                <span class="n">trans_note</span> <span class="o">=</span> <span class="n">get_cleaned_tag_string</span><span class="p">(</span><span class="n">tag_entry</span><span class="o">.</span><span class="n">getValue</span><span class="p">())</span>
+                <span class="n">trans_note</span> <span class="o">=</span> <span class="n">convert_abbreviation</span><span class="p">(</span><span class="n">trans_note</span><span class="p">)</span>
+                <span class="n">tag_data</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s1">&#39;object_id&#39;</span><span class="p">:</span> <span class="n">dataset</span><span class="o">.</span><span class="n">simpleMarshal</span><span class="p">()[</span><span class="s1">&#39;id&#39;</span><span class="p">],</span>
+                    <span class="s1">&#39;object_type&#39;</span><span class="p">:</span> <span class="n">dataset</span><span class="o">.</span><span class="n">simpleMarshal</span><span class="p">()[</span><span class="s1">&#39;type&#39;</span><span class="p">],</span>
+                    <span class="s1">&#39;tag_name&#39;</span><span class="p">:</span> <span class="n">tag_entry</span><span class="o">.</span><span class="n">getValue</span><span class="p">(),</span>
+                    <span class="s1">&#39;translated_tag_name&#39;</span><span class="p">:</span> <span class="n">trans_note</span><span class="p">,</span>
+                    <span class="s1">&#39;created_timestamp&#39;</span><span class="p">:</span> <span class="n">convert_omero_timestamp</span><span class="p">(</span><span class="n">tag_entry</span><span class="o">.</span><span class="n">creationEventDate</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()),</span>
+                    <span class="s1">&#39;modified_timestamp&#39;</span><span class="p">:</span> <span class="n">convert_omero_timestamp</span><span class="p">(</span><span class="n">tag_entry</span><span class="o">.</span><span class="n">creationEventDate</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()),</span>
+                    <span class="s1">&#39;used&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                    <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="n">get_tag_description</span><span class="p">(</span><span class="n">trans_note</span><span class="p">),</span>
+                    <span class="s1">&#39;source&#39;</span><span class="p">:</span> <span class="s1">&#39;omero&#39;</span>
+                <span class="p">}</span>
+                <span class="c1"># Insert tag data into the database</span>
+                <span class="n">insert_dict_to_database</span><span class="p">(</span><span class="n">db_name</span><span class="p">,</span> <span class="n">tag_table_name</span><span class="p">,</span> <span class="n">tag_data</span><span class="p">)</span>
+
+            <span class="c1"># Iterate over each image in the dataset</span>
+            <span class="k">for</span> <span class="n">image</span> <span class="ow">in</span> <span class="n">dataset</span><span class="o">.</span><span class="n">listChildren</span><span class="p">():</span>
+                <span class="c1"># Extract image data</span>
+                <span class="n">image_data</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s1">&#39;object_name&#39;</span><span class="p">:</span> <span class="n">image</span><span class="o">.</span><span class="n">simpleMarshal</span><span class="p">()[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span>
+                    <span class="s1">&#39;object_type&#39;</span><span class="p">:</span> <span class="n">image</span><span class="o">.</span><span class="n">simpleMarshal</span><span class="p">()[</span><span class="s1">&#39;type&#39;</span><span class="p">],</span>
+                    <span class="s1">&#39;specific_id&#39;</span><span class="p">:</span> <span class="n">image</span><span class="o">.</span><span class="n">simpleMarshal</span><span class="p">()[</span><span class="s1">&#39;id&#39;</span><span class="p">],</span>
+                    <span class="s1">&#39;user&#39;</span><span class="p">:</span> <span class="n">image</span><span class="o">.</span><span class="n">getOwnerOmeName</span><span class="p">(),</span>
+                    <span class="s1">&#39;created_timestamp&#39;</span><span class="p">:</span> <span class="n">convert_omero_timestamp</span><span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">creationEventDate</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()),</span>
+                    <span class="s1">&#39;modified_timestamp&#39;</span><span class="p">:</span> <span class="n">convert_omero_timestamp</span><span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">updateEventDate</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()),</span>
+                    <span class="s1">&#39;notes&#39;</span><span class="p">:</span> <span class="n">image</span><span class="o">.</span><span class="n">simpleMarshal</span><span class="p">()[</span><span class="s1">&#39;description&#39;</span><span class="p">],</span>
+                    <span class="s1">&#39;source&#39;</span><span class="p">:</span> <span class="s1">&#39;omero&#39;</span>
+                <span class="p">}</span>
+                <span class="c1"># Insert image data into the database</span>
+                <span class="n">insert_dict_to_database</span><span class="p">(</span><span class="n">db_name</span><span class="p">,</span> <span class="n">object_table_name</span><span class="p">,</span> <span class="n">image_data</span><span class="p">)</span>
+
+                <span class="c1"># Iterate over each tag in the image and add it to the database</span>
+                <span class="k">for</span> <span class="n">tag_entry</span> <span class="ow">in</span> <span class="n">image</span><span class="o">.</span><span class="n">listAnnotations</span><span class="p">():</span>
+                    <span class="c1"># Extract and process tag data</span>
+                    <span class="n">trans_note</span> <span class="o">=</span> <span class="n">get_cleaned_tag_string</span><span class="p">(</span><span class="n">tag_entry</span><span class="o">.</span><span class="n">getValue</span><span class="p">())</span>
+                    <span class="n">trans_note</span> <span class="o">=</span> <span class="n">convert_abbreviation</span><span class="p">(</span><span class="n">trans_note</span><span class="p">)</span>
+                    <span class="n">tag_data</span> <span class="o">=</span> <span class="p">{</span>
+                        <span class="s1">&#39;object_id&#39;</span><span class="p">:</span> <span class="n">image</span><span class="o">.</span><span class="n">simpleMarshal</span><span class="p">()[</span><span class="s1">&#39;id&#39;</span><span class="p">],</span>
+                        <span class="s1">&#39;object_type&#39;</span><span class="p">:</span> <span class="n">image</span><span class="o">.</span><span class="n">simpleMarshal</span><span class="p">()[</span><span class="s1">&#39;type&#39;</span><span class="p">],</span>
+                        <span class="s1">&#39;tag_name&#39;</span><span class="p">:</span> <span class="n">tag_entry</span><span class="o">.</span><span class="n">getValue</span><span class="p">(),</span>
+                        <span class="s1">&#39;translated_tag_name&#39;</span><span class="p">:</span> <span class="n">trans_note</span><span class="p">,</span>
+                        <span class="s1">&#39;created_timestamp&#39;</span><span class="p">:</span> <span class="n">convert_omero_timestamp</span><span class="p">(</span><span class="n">tag_entry</span><span class="o">.</span><span class="n">creationEventDate</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()),</span>
+                        <span class="s1">&#39;modified_timestamp&#39;</span><span class="p">:</span> <span class="n">convert_omero_timestamp</span><span class="p">(</span><span class="n">tag_entry</span><span class="o">.</span><span class="n">creationEventDate</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()),</span>
+                        <span class="s1">&#39;used&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                        <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="n">get_tag_description</span><span class="p">(</span><span class="n">trans_note</span><span class="p">),</span>
+                        <span class="s1">&#39;source&#39;</span><span class="p">:</span> <span class="s1">&#39;omero&#39;</span>
+                    <span class="p">}</span>
+                    <span class="c1"># Insert tag data into the database</span>
+                    <span class="n">insert_dict_to_database</span><span class="p">(</span><span class="n">db_name</span><span class="p">,</span> <span class="n">tag_table_name</span><span class="p">,</span> <span class="n">tag_data</span><span class="p">)</span>
+
+    <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="c1"># Remove duplicate objects and tags from the database</span>
+    <span class="n">delete_duplicate_objects</span><span class="p">()</span>
+    <span class="n">delete_duplicate_tags</span><span class="p">()</span></div>
+
+
+<span class="c1">#!/usr/bin/env python</span>
+<span class="c1"># coding: utf-8</span>
+<span class="c1">##################################################</span>
+<span class="c1"># NETSTORE -&gt; sqldb</span>
+
+<div class="viewcode-block" id="get_netstore_filelist">
+<a class="viewcode-back" href="../all_to_db.html#all_to_db.get_netstore_filelist">[docs]</a>
+<span class="k">def</span> <span class="nf">get_netstore_filelist</span><span class="p">(</span><span class="n">folder</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Retrieves a list of files from a specified folder and organizes them by project.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        folder (str): The path to the folder containing the files.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tuple: A tuple containing the list of project names and a dictionary of file lists organized by project.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">filelist</span> <span class="o">=</span> <span class="n">get_inputlist</span><span class="p">(</span><span class="n">folder</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">filelist</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">5</span><span class="p">])</span>
+    <span class="c1"># filelist = filelist[:10000]</span>
+    <span class="c1"># Read the project names from the folder</span>
+    <span class="n">cutfilelist</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">folder</span><span class="p">)</span><span class="o">+</span><span class="nb">len</span><span class="p">(</span><span class="n">folder</span><span class="p">):]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">filelist</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;found basefolders: &quot;</span><span class="p">,</span> <span class="n">cutfilelist</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">5</span><span class="p">])</span>
+    <span class="n">projectlist</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">([</span><span class="n">x</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">cutfilelist</span><span class="p">]))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;found projects: &quot;</span><span class="p">,</span> <span class="n">projectlist</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">5</span><span class="p">])</span>
+    <span class="c1"># Read project, start, end, tags from folders/files</span>
+    <span class="n">fileDict</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">project</span> <span class="ow">in</span> <span class="n">projectlist</span><span class="p">:</span>
+        <span class="n">tmp</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">filelist</span> <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">project</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">fileDict</span><span class="p">[</span><span class="n">project</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">fileDict</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+    <span class="k">return</span> <span class="n">fileDict</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="n">fileDict</span></div>
+
+
+<span class="n">folder</span> <span class="o">=</span> <span class="s2">&quot;/home/omero-import&quot;</span>
+<span class="c1"># project_list, file_dict = get_netstore_filelist()</span>
+
+<div class="viewcode-block" id="get_file_stats">
+<a class="viewcode-back" href="../all_to_db.html#all_to_db.get_file_stats">[docs]</a>
+<span class="k">def</span> <span class="nf">get_file_stats</span><span class="p">(</span><span class="n">file_path</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Retrieves statistics for a given file.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        file_path (str): The path to the file.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: A dictionary containing the file statistics.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Get file stats</span>
+    <span class="n">file_stats</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">stat</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+
+    <span class="c1"># Extract required stats</span>
+    <span class="n">file_name</span> <span class="o">=</span> <span class="n">file_path</span>
+    <span class="n">file_extension</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">file_path</span><span class="p">))[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">file_extension</span> <span class="o">==</span> <span class="s1">&#39;.gz&#39;</span><span class="p">:</span>
+        <span class="n">file_extension</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> \
+            <span class="s2">&quot;.&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">2</span><span class="p">:])</span>
+    <span class="n">file_size</span> <span class="o">=</span> <span class="n">file_stats</span><span class="o">.</span><span class="n">st_size</span>
+    <span class="n">created_timestamp</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">fromtimestamp</span><span class="p">(</span>
+        <span class="n">file_stats</span><span class="o">.</span><span class="n">st_ctime</span><span class="p">)</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S&#39;</span><span class="p">)</span>
+    <span class="n">modified_timestamp</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">fromtimestamp</span><span class="p">(</span>
+        <span class="n">file_stats</span><span class="o">.</span><span class="n">st_mtime</span><span class="p">)</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Return stats as a dictionary</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s1">&#39;object_name&#39;</span><span class="p">:</span> <span class="n">file_name</span><span class="p">,</span>
+        <span class="s1">&#39;object_type&#39;</span><span class="p">:</span> <span class="n">file_extension</span><span class="p">,</span>
+        <span class="s1">&#39;object_size&#39;</span><span class="p">:</span> <span class="n">file_size</span><span class="p">,</span>
+        <span class="s1">&#39;created_timestamp&#39;</span><span class="p">:</span> <span class="n">created_timestamp</span><span class="p">,</span>
+        <span class="s1">&#39;modified_timestamp&#39;</span><span class="p">:</span> <span class="n">modified_timestamp</span><span class="p">,</span>
+        <span class="s1">&#39;source&#39;</span><span class="p">:</span> <span class="s1">&#39;fs_storage&#39;</span>
+    <span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="get_current_username">
+<a class="viewcode-back" href="../all_to_db.html#all_to_db.get_current_username">[docs]</a>
+<span class="k">def</span> <span class="nf">get_current_username</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Retrieves the current username.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The current username.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">import</span> <span class="nn">getpass</span>
+    <span class="k">return</span> <span class="n">getpass</span><span class="o">.</span><span class="n">getuser</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="auto_insert_netstore_to_database">
+<a class="viewcode-back" href="../all_to_db.html#all_to_db.auto_insert_netstore_to_database">[docs]</a>
+<span class="k">def</span> <span class="nf">auto_insert_netstore_to_database</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Automatically inserts Netstore file data into the database.</span>
+
+<span class="sd">    This function retrieves a list of files from a specified folder, organizes them by project,</span>
+<span class="sd">    and inserts the project and file data into the specified database tables.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">project_list</span><span class="p">,</span> <span class="n">file_dict</span> <span class="o">=</span> <span class="n">get_netstore_filelist</span><span class="p">()</span>
+    <span class="n">folder</span> <span class="o">=</span> <span class="s2">&quot;/home/omero-import&quot;</span>
+    <span class="n">db_name</span> <span class="o">=</span> <span class="s1">&#39;sync_database.db&#39;</span>
+    <span class="n">check_db_table</span><span class="p">(</span><span class="n">db_name</span><span class="p">,</span> <span class="s2">&quot;fs_storage&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">get_current_username</span><span class="p">())</span>
+
+    <span class="k">for</span> <span class="n">proj</span> <span class="ow">in</span> <span class="n">project_list</span><span class="p">:</span>
+        <span class="nb">object</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;object_name&#39;</span><span class="p">:</span> <span class="n">proj</span><span class="p">,</span>
+            <span class="s1">&#39;object_type&#39;</span><span class="p">:</span> <span class="s1">&#39;Project&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;specific_id&#39;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">folder</span><span class="p">,</span> <span class="n">proj</span><span class="p">),</span>
+            <span class="s1">&#39;user&#39;</span><span class="p">:</span> <span class="n">get_current_username</span><span class="p">(),</span>
+            <span class="s1">&#39;created_timestamp&#39;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;modified_timestamp&#39;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;notes&#39;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;source&#39;</span><span class="p">:</span> <span class="s1">&#39;fs_storage&#39;</span>
+        <span class="p">}</span>
+
+        <span class="n">insert_dict_to_database</span><span class="p">(</span><span class="n">db_name</span><span class="p">,</span> <span class="s2">&quot;object&quot;</span><span class="p">,</span> <span class="nb">object</span><span class="p">)</span>
+        <span class="n">object_id</span> <span class="o">=</span> <span class="n">get_object_id_from_netstore_name</span><span class="p">(</span><span class="n">db_name</span><span class="p">,</span> <span class="s1">&#39;object&#39;</span><span class="p">,</span> <span class="n">proj</span><span class="p">)</span>
+
+        <span class="c1"># if object_id &gt; 921: break ##testcase</span>
+
+        <span class="n">tags</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">file_dict</span><span class="p">[</span><span class="n">proj</span><span class="p">]:</span>
+            <span class="n">tmp</span> <span class="o">=</span> <span class="n">get_file_stats</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+            <span class="n">tmp</span><span class="p">[</span><span class="s1">&#39;object_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">object_id</span>
+            <span class="n">insert_dict_to_database</span><span class="p">(</span><span class="n">db_name</span><span class="p">,</span> <span class="s2">&quot;fs_storage&quot;</span><span class="p">,</span> <span class="n">tmp</span><span class="p">)</span>
+
+            <span class="c1"># Get the tags and insert them into the taglist</span>
+            <span class="n">l</span> <span class="o">=</span> <span class="n">file</span><span class="p">[</span><span class="n">file</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">folder</span><span class="p">)</span><span class="o">+</span><span class="nb">len</span><span class="p">(</span><span class="n">folder</span><span class="p">):]</span>
+            <span class="n">sep</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;/|-|_|\.|,&quot;</span>
+            <span class="n">tags</span> <span class="o">+=</span> <span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">sep</span><span class="p">,</span> <span class="n">l</span><span class="p">)</span>
+            <span class="c1"># Try to find the possible relevant tags (TODO: create a dictionary to white/black list tags)</span>
+            <span class="n">tags</span> <span class="o">=</span> <span class="n">get_possible_tags_list</span><span class="p">(</span><span class="n">tags</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">tags</span><span class="p">:</span>
+                <span class="n">trans_note</span> <span class="o">=</span> <span class="n">get_cleaned_tag_string</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
+                <span class="n">trans_note</span> <span class="o">=</span> <span class="n">convert_abbreviation</span><span class="p">(</span><span class="n">trans_note</span><span class="p">)</span>
+                <span class="n">tag_data</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s1">&#39;object_id&#39;</span><span class="p">:</span> <span class="n">object_id</span><span class="p">,</span>
+                    <span class="s1">&#39;object_type&#39;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                    <span class="s1">&#39;tag_name&#39;</span><span class="p">:</span> <span class="n">tag</span><span class="p">,</span>
+                    <span class="s1">&#39;translated_tag_name&#39;</span><span class="p">:</span> <span class="n">trans_note</span><span class="p">,</span>
+                    <span class="s1">&#39;created_timestamp&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">),</span>
+                    <span class="s1">&#39;modified_timestamp&#39;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                    <span class="s1">&#39;used&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                    <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="n">get_tag_description</span><span class="p">(</span><span class="n">trans_note</span><span class="p">),</span>
+                    <span class="s1">&#39;source&#39;</span><span class="p">:</span> <span class="s1">&#39;fs_storage&#39;</span>
+                <span class="p">}</span>
+                <span class="c1"># Insert tag data into the database</span>
+                <span class="n">insert_dict_to_database</span><span class="p">(</span><span class="n">db_name</span><span class="p">,</span> <span class="s2">&quot;tag&quot;</span><span class="p">,</span> <span class="n">tag_data</span><span class="p">)</span>
+                <span class="c1">###############</span>
+                <span class="c1"># Get min/max timestamp for files in fs_storage table</span>
+                <span class="c1"># (min_timestamp, max_timestamp) = get_project_timestamps_from_fs_storage(db_name, object_id)</span>
+                <span class="c1">###############</span>
+    <span class="c1"># Remove duplicate objects and tags from the database</span>
+    <span class="n">delete_duplicate_objects</span><span class="p">()</span>
+    <span class="n">delete_duplicate_tags</span><span class="p">()</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Main function to execute the data insertion process.</span>
+
+<span class="sd">    This function sequentially inserts data from various sources into the database</span>
+<span class="sd">    and removes duplicate entries.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">import</span> <span class="nn">time</span>
+    <span class="n">db_name</span> <span class="o">=</span> <span class="s1">&#39;sync_database.db&#39;</span>
+    <span class="n">table_name</span> <span class="o">=</span> <span class="s1">&#39;object&#39;</span>
+    <span class="n">total_runtime</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="n">insert_egroupware</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">total_runtime</span> <span class="o">+=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;egroupware readout done&quot;</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;##################################################################################&quot;</span><span class="p">)</span>
+    <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="n">rspace_docs</span> <span class="o">=</span> <span class="n">get_sample_data_from_barcode</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="n">rspace_forms</span> <span class="o">=</span> <span class="n">get_rspace_workspace_folders</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="n">process_rspace_folder</span><span class="p">(</span><span class="n">rspace_forms</span><span class="p">,</span> <span class="n">db_name</span><span class="p">,</span> <span class="n">table_name</span><span class="p">)</span>
+    <span class="n">process_rspace_documents</span><span class="p">(</span><span class="n">rspace_docs</span><span class="p">,</span> <span class="n">db_name</span><span class="p">,</span> <span class="n">table_name</span><span class="p">)</span>
+    <span class="n">insert_rspace_to_db</span><span class="p">()</span>
+    <span class="n">total_runtime</span> <span class="o">+=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;rspace readout done&quot;</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;##################################################################################&quot;</span><span class="p">)</span>
+    <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="n">auto_insert_omero_to_database</span><span class="p">()</span>
+    <span class="n">total_runtime</span> <span class="o">+=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;omero readout done&quot;</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;##################################################################################&quot;</span><span class="p">)</span>
+    <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="n">delete_duplicate_objects</span><span class="p">()</span>
+    <span class="n">delete_duplicate_tags</span><span class="p">()</span>
+    <span class="n">delete_duplicate_links</span><span class="p">()</span>
+    <span class="n">total_runtime</span> <span class="o">+=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;database duplettes delection done&quot;</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;##################################################################################&quot;</span><span class="p">)</span>
+    <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="n">auto_insert_netstore_to_database</span><span class="p">()</span>
+    <span class="n">total_runtime</span> <span class="o">+=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;netstore readout done&quot;</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">)</span>
+<span class="w">    </span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">#!/usr/bin/env python</span>
+<span class="sd"># coding: utf-8</span>
+<span class="sd">##################################################</span>
+<span class="sd">## OMERO -&gt; sqldb</span>
+
+<span class="sd">def convert_omero_timestamp(timestamp):</span>
+<span class="sd">    return datetime.datetime.strptime(timestamp, &quot;%Y-%m-%dT%H:%M:%S&quot;).strftime(&quot;%Y-%m-%d %H:%M:%S&quot;)</span>
+
+<span class="sd"># Establish connection to OMERO</span>
+<span class="sd">conn = BlitzGateway(&#39;inplace&#39;, &#39;omero&#39;, host=&#39;0.0.0.0&#39;, port=4064)</span>
+<span class="sd">conn.connect()</span>
+
+<span class="sd"># Get all projects from OMERO</span>
+<span class="sd">projects = conn.getObjects(&quot;Project&quot;)</span>
+
+<span class="sd"># Get sample data from barcode and define database and table names</span>
+<span class="sd">rspace_docs = get_sample_data_from_barcode(&quot;&quot;)</span>
+<span class="sd">db_name = &#39;sync_database.db&#39;</span>
+<span class="sd">table_name = &#39;tag&#39;</span>
+
+<span class="sd"># Check if the database and table exist, if not, create them</span>
+<span class="sd">check_db_table(db_name, table_name)</span>
+<span class="sd">table_name = &#39;object&#39;</span>
+<span class="sd">check_db_table(db_name, table_name)</span>
+
+<span class="sd"># Iterate over each project</span>
+<span class="sd">for project in projects:</span>
+<span class="sd">    # Add project data to the database</span>
+<span class="sd">    object_project = {</span>
+<span class="sd">        &#39;object_name&#39;: project.simpleMarshal()[&#39;name&#39;],</span>
+<span class="sd">        &#39;object_type&#39;: project.simpleMarshal()[&#39;type&#39;],</span>
+<span class="sd">        &#39;specific_id&#39;: project.simpleMarshal()[&#39;id&#39;],</span>
+<span class="sd">        &#39;user&#39;: project.getOwnerOmeName(),</span>
+<span class="sd">        &#39;created_timestamp&#39;: convert_omero_timestamp(project.creationEventDate().isoformat()),</span>
+<span class="sd">        &#39;modified_timestamp&#39;: convert_omero_timestamp(project.updateEventDate().isoformat()),</span>
+<span class="sd">        &#39;notes&#39;: &quot;&quot;,</span>
+<span class="sd">        &#39;source&#39;: &#39;omero&#39;</span>
+<span class="sd">    }</span>
+<span class="sd">    insert_dict_to_database(db_name, &quot;object&quot;, object_project)</span>
+
+<span class="sd">    # Iterate over each tag in the project and add it to the database</span>
+<span class="sd">    for tag_entry in project.listAnnotations():</span>
+<span class="sd">        trans_note = get_cleaned_tag_string(tag_entry.getValue())</span>
+<span class="sd">        trans_note = convert_abbreviation(trans_note)</span>
+<span class="sd">        tag = {</span>
+<span class="sd">            &#39;object_id&#39;: project.simpleMarshal()[&#39;id&#39;],</span>
+<span class="sd">            &#39;object_type&#39;: project.simpleMarshal()[&#39;type&#39;],</span>
+<span class="sd">            &#39;tag_name&#39;: tag_entry.getValue(),</span>
+<span class="sd">            &#39;translated_tag_name&#39;: trans_note,</span>
+<span class="sd">            &#39;created_timestamp&#39;: convert_omero_timestamp(tag_entry.creationEventDate().isoformat()),</span>
+<span class="sd">            &#39;modified_timestamp&#39;: convert_omero_timestamp(tag_entry.updateEventDate().isoformat()),</span>
+<span class="sd">            &#39;used&#39;: 1,</span>
+<span class="sd">            &#39;description&#39;: get_tag_description(trans_note),</span>
+<span class="sd">            &#39;source&#39;: &#39;omero&#39;</span>
+<span class="sd">        }</span>
+<span class="sd">        insert_dict_to_database(db_name, &quot;tag&quot;, tag)</span>
+
+<span class="sd">    # Iterate over each dataset in the project</span>
+<span class="sd">    for dataset in project.listChildren():</span>
+<span class="sd">        # Add dataset data to the database</span>
+<span class="sd">        object_dataset = {</span>
+<span class="sd">            &#39;object_name&#39;: dataset.simpleMarshal()[&#39;name&#39;],</span>
+<span class="sd">            &#39;object_type&#39;: dataset.simpleMarshal()[&#39;type&#39;],</span>
+<span class="sd">            &#39;specific_id&#39;: dataset.simpleMarshal()[&#39;id&#39;],</span>
+<span class="sd">            &#39;user&#39;: dataset.getOwnerOmeName(),</span>
+<span class="sd">            &#39;created_timestamp&#39;: convert_omero_timestamp(dataset.creationEventDate().isoformat()),</span>
+<span class="sd">            &#39;modified_timestamp&#39;: convert_omero_timestamp(dataset.updateEventDate().isoformat()),</span>
+<span class="sd">            &#39;notes&#39;: dataset.simpleMarshal()[&#39;description&#39;],</span>
+<span class="sd">            &#39;source&#39;: &#39;omero&#39;</span>
+<span class="sd">        }</span>
+<span class="sd">        insert_dict_to_database(db_name, &quot;object&quot;, object_dataset)</span>
+
+<span class="sd">        # Iterate over each tag in the dataset and add it to the database</span>
+<span class="sd">        for tag_entry in dataset.listAnnotations():</span>
+<span class="sd">            trans_note = get_cleaned_tag_string(tag_entry.getValue())</span>
+<span class="sd">            trans_note = convert_abbreviation(trans_note)</span>
+<span class="sd">            tag = {</span>
+<span class="sd">                &#39;object_id&#39;: dataset.simpleMarshal()[&#39;id&#39;],</span>
+<span class="sd">                &#39;object_type&#39;: dataset.simpleMarshal()[&#39;type&#39;],</span>
+<span class="sd">                &#39;tag_name&#39;: tag_entry.getValue(),</span>
+<span class="sd">                &#39;translated_tag_name&#39;: trans_note,</span>
+<span class="sd">                &#39;created_timestamp&#39;: convert_omero_timestamp(tag_entry.creationEventDate().isoformat()),</span>
+<span class="sd">                &#39;modified_timestamp&#39;: convert_omero_timestamp(tag_entry.creationEventDate().isoformat()),</span>
+<span class="sd">                &#39;used&#39;: 1,</span>
+<span class="sd">                &#39;description&#39;: get_tag_description(trans_note),</span>
+<span class="sd">                &#39;source&#39;: &#39;omero&#39;</span>
+<span class="sd">            }</span>
+<span class="sd">            insert_dict_to_database(db_name, &quot;tag&quot;, tag)</span>
+
+<span class="sd">        # Iterate over each image in the dataset</span>
+<span class="sd">        for image in dataset.listChildren():</span>
+<span class="sd">            # Add image data to the database</span>
+<span class="sd">            object_image = {</span>
+<span class="sd">                &#39;object_name&#39;: image.simpleMarshal()[&#39;name&#39;],</span>
+<span class="sd">                &#39;object_type&#39;: image.simpleMarshal()[&#39;type&#39;],</span>
+<span class="sd">                &#39;specific_id&#39;: image.simpleMarshal()[&#39;id&#39;],</span>
+<span class="sd">                &#39;user&#39;: image.getOwnerOmeName(),</span>
+<span class="sd">                &#39;created_timestamp&#39;: convert_omero_timestamp(image.creationEventDate().isoformat()),</span>
+<span class="sd">                &#39;modified_timestamp&#39;: convert_omero_timestamp(image.updateEventDate().isoformat()),</span>
+<span class="sd">                &#39;notes&#39;: image.simpleMarshal()[&#39;description&#39;],</span>
+<span class="sd">                &#39;source&#39;: &#39;omero&#39;</span>
+<span class="sd">            }</span>
+<span class="sd">            insert_dict_to_database(db_name, &quot;object&quot;, object_image)</span>
+
+<span class="sd">            # Iterate over each tag in the image and add it to the database</span>
+<span class="sd">            for tag_entry in image.listAnnotations():</span>
+<span class="sd">                trans_note = get_cleaned_tag_string(tag_entry.getValue())</span>
+<span class="sd">                trans_note = convert_abbreviation(trans_note)</span>
+<span class="sd">                tag = {</span>
+<span class="sd">                    &#39;object_id&#39;: image.simpleMarshal()[&#39;id&#39;],</span>
+<span class="sd">                    &#39;object_type&#39;: image.simpleMarshal()[&#39;type&#39;],</span>
+<span class="sd">                    &#39;tag_name&#39;: tag_entry.getValue(),</span>
+<span class="sd">                    &#39;translated_tag_name&#39;: trans_note,</span>
+<span class="sd">                    &#39;created_timestamp&#39;: convert_omero_timestamp(tag_entry.creationEventDate().isoformat()),</span>
+<span class="sd">                    &#39;modified_timestamp&#39;: convert_omero_timestamp(tag_entry.creationEventDate().isoformat()),</span>
+<span class="sd">                    &#39;used&#39;: 1,</span>
+<span class="sd">                    &#39;description&#39;: get_tag_description(trans_note),</span>
+<span class="sd">                    &#39;source&#39;: &#39;omero&#39;</span>
+<span class="sd">                }</span>
+<span class="sd">                insert_dict_to_database(db_name, &quot;tag&quot;, tag)</span>
+
+<span class="sd"># Remove duplicate objects and tags from the database</span>
+<span class="sd">delete_duplicate_objects()</span>
+<span class="sd">delete_duplicate_tags()</span>
+<span class="sd">&quot;&quot;&quot;</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, saibotMagd.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

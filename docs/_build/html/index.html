@@ -1,0 +1,287 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RDM_system_connector documentation &mdash; RDM_system_connector documentation 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=2709fde1"></script>
+      <script src="_static/doctools.js?v=9a2dae69"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="RDM_system_connector" href="modules.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="#" class="icon icon-home">
+            RDM_system_connector documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">RDM_system_connector</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">RDM_system_connector documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">RDM_system_connector documentation</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="rdm-system-connector-documentation">
+<h1>RDM_system_connector documentation<a class="headerlink" href="#rdm-system-connector-documentation" title="Link to this heading"></a></h1>
+</section>
+<section id="project-synchronization-tool">
+<h1>Project Synchronization Tool<a class="headerlink" href="#project-synchronization-tool" title="Link to this heading"></a></h1>
+<a class="reference external image-reference" href="https://creativecommons.org/licenses/by/4.0/"><img alt="License: CC BY 4.0" src="https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg" />
+</a>
+<p>This tool is designed to synchronize the entries in a four-tool system, which includes:</p>
+<ul class="simple">
+<li><p>A project registration system (eGroupware)</p></li>
+<li><p>An electronic lab book (Rspace)</p></li>
+<li><p>An image database (OMERO)</p></li>
+<li><p>A long-term netstorage system (LINstore)</p></li>
+</ul>
+<p>The tool achieves this by running a daemon that continuously extracts the entries from these four tools and writes them into a database.</p>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">RDM_system_connector</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="all_to_db.html">all_to_db module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="all_to_db.html#all_to_db.auto_insert_netstore_to_database"><code class="docutils literal notranslate"><span class="pre">auto_insert_netstore_to_database()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="all_to_db.html#all_to_db.auto_insert_omero_to_database"><code class="docutils literal notranslate"><span class="pre">auto_insert_omero_to_database()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="all_to_db.html#all_to_db.convert_omero_timestamp"><code class="docutils literal notranslate"><span class="pre">convert_omero_timestamp()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="all_to_db.html#all_to_db.convert_rspace_timestamp"><code class="docutils literal notranslate"><span class="pre">convert_rspace_timestamp()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="all_to_db.html#all_to_db.get_current_username"><code class="docutils literal notranslate"><span class="pre">get_current_username()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="all_to_db.html#all_to_db.get_file_stats"><code class="docutils literal notranslate"><span class="pre">get_file_stats()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="all_to_db.html#all_to_db.get_netstore_filelist"><code class="docutils literal notranslate"><span class="pre">get_netstore_filelist()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="all_to_db.html#all_to_db.get_rspace_workspace_folders"><code class="docutils literal notranslate"><span class="pre">get_rspace_workspace_folders()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="all_to_db.html#all_to_db.insert_egroupware"><code class="docutils literal notranslate"><span class="pre">insert_egroupware()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="all_to_db.html#all_to_db.insert_rspace_to_db"><code class="docutils literal notranslate"><span class="pre">insert_rspace_to_db()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="all_to_db.html#all_to_db.process_rspace_documents"><code class="docutils literal notranslate"><span class="pre">process_rspace_documents()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="all_to_db.html#all_to_db.process_rspace_folder"><code class="docutils literal notranslate"><span class="pre">process_rspace_folder()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="all_to_db.html#all_to_db.process_tags"><code class="docutils literal notranslate"><span class="pre">process_tags()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="db_to_all_synced.html">db_to_all_synced module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="db_to_all_synced.html#db_to_all_synced.create_links"><code class="docutils literal notranslate"><span class="pre">create_links()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="db_to_all_synced.html#db_to_all_synced.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="db_to_all_synced.html#db_to_all_synced.sync_omero"><code class="docutils literal notranslate"><span class="pre">sync_omero()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="db_to_all_synced.html#db_to_all_synced.sync_rspace"><code class="docutils literal notranslate"><span class="pre">sync_rspace()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="folder_extract_mt.html">folder_extract_mt module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="folder_extract_mt.html#folder_extract_mt.list_files"><code class="docutils literal notranslate"><span class="pre">list_files()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="folder_extract_mt.html#folder_extract_mt.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="folder_extract_mt.html#folder_extract_mt.write_files"><code class="docutils literal notranslate"><span class="pre">write_files()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="folder_extract_parallel.html">folder_extract_parallel module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="folder_extract_parallel.html#folder_extract_parallel.get_file_info"><code class="docutils literal notranslate"><span class="pre">get_file_info()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="folder_extract_parallel.html#folder_extract_parallel.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="folder_extract_parallel.html#folder_extract_parallel.process_folder"><code class="docutils literal notranslate"><span class="pre">process_folder()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="folder_extract_parallel.html#folder_extract_parallel.save_to_database"><code class="docutils literal notranslate"><span class="pre">save_to_database()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="main.html">main module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="main.html#main.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ols_lookup.html">ols_lookup module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ols_lookup.html#ols_lookup.calculate_overlap"><code class="docutils literal notranslate"><span class="pre">calculate_overlap()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ols_lookup.html#ols_lookup.fetch_searchStr_info"><code class="docutils literal notranslate"><span class="pre">fetch_searchStr_info()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ols_lookup.html#ols_lookup.find_best_match"><code class="docutils literal notranslate"><span class="pre">find_best_match()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ols_lookup.html#ols_lookup.generate_substrings"><code class="docutils literal notranslate"><span class="pre">generate_substrings()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ols_lookup.html#ols_lookup.get_matching_entries"><code class="docutils literal notranslate"><span class="pre">get_matching_entries()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ols_lookup.html#ols_lookup.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ols_lookup.html#ols_lookup.read_json_file"><code class="docutils literal notranslate"><span class="pre">read_json_file()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="src.html">src package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="src.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="src.html#module-src.io_functions">src.io_functions module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_functions.add_attachment_to_project"><code class="docutils literal notranslate"><span class="pre">add_attachment_to_project()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_functions.auto_insert_fs_storage_to_database"><code class="docutils literal notranslate"><span class="pre">auto_insert_fs_storage_to_database()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_functions.auto_insert_omero_to_database"><code class="docutils literal notranslate"><span class="pre">auto_insert_omero_to_database()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_functions.calculate_binary_overlap"><code class="docutils literal notranslate"><span class="pre">calculate_binary_overlap()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_functions.calculate_percentage"><code class="docutils literal notranslate"><span class="pre">calculate_percentage()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_functions.check_db_table"><code class="docutils literal notranslate"><span class="pre">check_db_table()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_functions.check_for_omero_entries"><code class="docutils literal notranslate"><span class="pre">check_for_omero_entries()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_functions.check_if_entry_exists"><code class="docutils literal notranslate"><span class="pre">check_if_entry_exists()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_functions.convert_abbreviation"><code class="docutils literal notranslate"><span class="pre">convert_abbreviation()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_functions.convert_abbreviations"><code class="docutils literal notranslate"><span class="pre">convert_abbreviations()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_functions.convert_omero_timestamp"><code class="docutils literal notranslate"><span class="pre">convert_omero_timestamp()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_functions.convert_rspace_timestamp"><code class="docutils literal notranslate"><span class="pre">convert_rspace_timestamp()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_functions.copy_author_from_projectcolumn"><code class="docutils literal notranslate"><span class="pre">copy_author_from_projectcolumn()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_functions.create_bulk_import_file"><code class="docutils literal notranslate"><span class="pre">create_bulk_import_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_functions.create_link"><code class="docutils literal notranslate"><span class="pre">create_link()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_functions.create_object"><code class="docutils literal notranslate"><span class="pre">create_object()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_functions.create_rspace_document"><code class="docutils literal notranslate"><span class="pre">create_rspace_document()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_functions.create_rspace_document_header"><code class="docutils literal notranslate"><span class="pre">create_rspace_document_header()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_functions.create_rspace_files_table"><code class="docutils literal notranslate"><span class="pre">create_rspace_files_table()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_functions.create_rspace_folder"><code class="docutils literal notranslate"><span class="pre">create_rspace_folder()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_functions.create_system_overlap"><code class="docutils literal notranslate"><span class="pre">create_system_overlap()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_functions.create_tag"><code class="docutils literal notranslate"><span class="pre">create_tag()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_functions.delete_duplicate_links"><code class="docutils literal notranslate"><span class="pre">delete_duplicate_links()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_functions.delete_duplicate_objects"><code class="docutils literal notranslate"><span class="pre">delete_duplicate_objects()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_functions.delete_duplicate_tags"><code class="docutils literal notranslate"><span class="pre">delete_duplicate_tags()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_functions.delete_duplicates_bulk_import"><code class="docutils literal notranslate"><span class="pre">delete_duplicates_bulk_import()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_functions.generate_html_table"><code class="docutils literal notranslate"><span class="pre">generate_html_table()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_functions.get_abbreviation_dict"><code class="docutils literal notranslate"><span class="pre">get_abbreviation_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_functions.get_cleaned_tag_string"><code class="docutils literal notranslate"><span class="pre">get_cleaned_tag_string()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_functions.get_col_overlap_df"><code class="docutils literal notranslate"><span class="pre">get_col_overlap_df()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_functions.get_create_table_sql"><code class="docutils literal notranslate"><span class="pre">get_create_table_sql()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_functions.get_current_username"><code class="docutils literal notranslate"><span class="pre">get_current_username()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_functions.get_dataframe"><code class="docutils literal notranslate"><span class="pre">get_dataframe()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_functions.get_dataset_fs_storage_name"><code class="docutils literal notranslate"><span class="pre">get_dataset_fs_storage_name()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_functions.get_description_dict"><code class="docutils literal notranslate"><span class="pre">get_description_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_functions.get_df_if_exist"><code class="docutils literal notranslate"><span class="pre">get_df_if_exist()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_functions.get_df_name"><code class="docutils literal notranslate"><span class="pre">get_df_name()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_functions.get_egroupware_data"><code class="docutils literal notranslate"><span class="pre">get_egroupware_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_functions.get_file_list"><code class="docutils literal notranslate"><span class="pre">get_file_list()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_functions.get_file_stats"><code class="docutils literal notranslate"><span class="pre">get_file_stats()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_functions.get_filelist_from_database"><code class="docutils literal notranslate"><span class="pre">get_filelist_from_database()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_functions.get_int_from_date"><code class="docutils literal notranslate"><span class="pre">get_int_from_date()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_functions.get_int_timestamp_from_iso"><code class="docutils literal notranslate"><span class="pre">get_int_timestamp_from_iso()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_functions.get_iso_timestamp_from_int"><code class="docutils literal notranslate"><span class="pre">get_iso_timestamp_from_int()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_functions.get_link_object_from_id"><code class="docutils literal notranslate"><span class="pre">get_link_object_from_id()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_functions.get_netstore_data"><code class="docutils literal notranslate"><span class="pre">get_netstore_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_functions.get_netstore_filelist"><code class="docutils literal notranslate"><span class="pre">get_netstore_filelist()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_functions.get_object_by_id"><code class="docutils literal notranslate"><span class="pre">get_object_by_id()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_functions.get_object_by_name"><code class="docutils literal notranslate"><span class="pre">get_object_by_name()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_functions.get_object_id_from_netstore_name"><code class="docutils literal notranslate"><span class="pre">get_object_id_from_netstore_name()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_functions.get_object_id_from_specific_id"><code class="docutils literal notranslate"><span class="pre">get_object_id_from_specific_id()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_functions.get_placeholder_files_for_rspace"><code class="docutils literal notranslate"><span class="pre">get_placeholder_files_for_rspace()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_functions.get_possible_tags_list"><code class="docutils literal notranslate"><span class="pre">get_possible_tags_list()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_functions.get_project_timestamps_from_fs_storage"><code class="docutils literal notranslate"><span class="pre">get_project_timestamps_from_fs_storage()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_functions.get_project_user_tuple"><code class="docutils literal notranslate"><span class="pre">get_project_user_tuple()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_functions.get_remaining_path"><code class="docutils literal notranslate"><span class="pre">get_remaining_path()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_functions.get_rspace_workspace_folders"><code class="docutils literal notranslate"><span class="pre">get_rspace_workspace_folders()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_functions.get_sample_data_from_barcode"><code class="docutils literal notranslate"><span class="pre">get_sample_data_from_barcode()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_functions.get_secret_api_parameters"><code class="docutils literal notranslate"><span class="pre">get_secret_api_parameters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_functions.get_stopwords"><code class="docutils literal notranslate"><span class="pre">get_stopwords()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_functions.get_tag_description"><code class="docutils literal notranslate"><span class="pre">get_tag_description()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_functions.get_tags_from_id"><code class="docutils literal notranslate"><span class="pre">get_tags_from_id()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_functions.get_tags_tuple"><code class="docutils literal notranslate"><span class="pre">get_tags_tuple()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_functions.insert_dict_to_database"><code class="docutils literal notranslate"><span class="pre">insert_dict_to_database()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_functions.insert_egroupware"><code class="docutils literal notranslate"><span class="pre">insert_egroupware()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_functions.is_string_in_list"><code class="docutils literal notranslate"><span class="pre">is_string_in_list()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_functions.load_json_file"><code class="docutils literal notranslate"><span class="pre">load_json_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_functions.omero_inplace_bulk_import"><code class="docutils literal notranslate"><span class="pre">omero_inplace_bulk_import()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_functions.omero_inplace_import"><code class="docutils literal notranslate"><span class="pre">omero_inplace_import()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_functions.process_rspace_documents"><code class="docutils literal notranslate"><span class="pre">process_rspace_documents()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_functions.process_rspace_folder"><code class="docutils literal notranslate"><span class="pre">process_rspace_folder()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_functions.process_tags"><code class="docutils literal notranslate"><span class="pre">process_tags()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_functions.remove_stopwords"><code class="docutils literal notranslate"><span class="pre">remove_stopwords()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_functions.save_df"><code class="docutils literal notranslate"><span class="pre">save_df()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_functions.search_documents"><code class="docutils literal notranslate"><span class="pre">search_documents()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_functions.search_folder"><code class="docutils literal notranslate"><span class="pre">search_folder()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="src.html#module-src.io_metadata">src.io_metadata module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_metadata.extract_metadata"><code class="docutils literal notranslate"><span class="pre">extract_metadata()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_metadata.get_bf_metadata"><code class="docutils literal notranslate"><span class="pre">get_bf_metadata()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_metadata.get_init"><code class="docutils literal notranslate"><span class="pre">get_init()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_metadata.get_inputlist"><code class="docutils literal notranslate"><span class="pre">get_inputlist()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_metadata.is_tar_archive"><code class="docutils literal notranslate"><span class="pre">is_tar_archive()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_metadata.process_tar_gz"><code class="docutils literal notranslate"><span class="pre">process_tar_gz()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_metadata.save_metadata"><code class="docutils literal notranslate"><span class="pre">save_metadata()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_metadata.save_to_xml"><code class="docutils literal notranslate"><span class="pre">save_to_xml()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.io_metadata.search_string_in_file"><code class="docutils literal notranslate"><span class="pre">search_string_in_file()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="src.html#module-src.llm_response">src.llm_response module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.llm_response.get_base_prompt"><code class="docutils literal notranslate"><span class="pre">get_base_prompt()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.llm_response.get_mistral_response"><code class="docutils literal notranslate"><span class="pre">get_mistral_response()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="src.html#module-src">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Link to this heading"></a></h1>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="modules.html" class="btn btn-neutral float-right" title="RDM_system_connector" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, saibotMagd.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
